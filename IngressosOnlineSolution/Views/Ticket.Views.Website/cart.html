@@ -1,0 +1,31 @@
+﻿
+<table class="table">
+    <caption>
+        <a ng-click="model.refresh()" class="fa fa-1x fa-refresh right"></a> &nbsp;&nbsp;
+        {{rsx.label.shoppingCart}}
+
+    </caption>
+    <thead>
+        <tr>
+            <th>{{rsx.label.image}}</th>
+            <th>{{rsx.label.title}}</th>
+            <th>{{rsx.label.description}}</th>
+            <th>{{rsx.label.total}}</th>
+            <th>{{rsx.label.unitPrice}}</th>
+            <th>{{rsx.label.action}}</th>
+        </tr>
+    </thead>
+    <tbody id="shoppingCart"></tbody>
+    <tfoot>
+        <tr>
+            <td colspan="6">
+                <input type="button"
+                       ng-click="model.buy()"
+                       class="btn btn-success"
+                       value="{{rsx.label.buy}}" />
+            </td>
+        </tr>
+    </tfoot>
+
+</table>
+<credit rsx="rsx" model="model.creditCard"></credit>

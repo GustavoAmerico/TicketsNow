@@ -1,0 +1,158 @@
+﻿
+<div class="header">{{rsx.titulosPg.Registrese}}</div>
+<form method="post">
+    <div class="body bg-gray">
+        <fieldset>
+            <legend>{{rsx.label.personal}}</legend>
+            <div class="form-group">
+                <input type="text"
+                       maxlength="150"
+                       name="name"
+                       id="name"
+                       required
+                       class="form-control"
+                       ng-model="model.name"
+                       inputmode="latin-name"
+                       pattern="{{rsx.input.pattern.fullName}}"
+                       placeholder="{{rsx.input.placeholder.fullName}}"
+                       title="{{rsx.input.title.fullName}}" />
+            </div>
+            <div class="form-group">
+                <input type="text"
+                       maxlength="14"
+                       name="cpf"
+                       required
+                       placeholder="CPF"
+                       class="form-control"
+                       ng-model="model.cpf"
+                       pattern="{{rsx.input.pattern.cpf}}"
+                       title="correct format is xxx.xxx.xxx-xx" />
+            </div>
+            <div class="form-group">
+                <input type="date"
+                       maxlength="10"
+                       name="birthDate"
+                       required
+                       min="1900-01-01"
+                       placeholder="CPF"
+                       class="form-control"
+                       ng-model="model.birthDate"
+                       title="{{rsx.input.title.birthDate}}" />
+            </div>
+
+            <div class="form-group">
+                <select name="gender"
+                        id="gender"
+                        class="form-control"
+                        ng-model="model.gender"
+                        required=""
+                        title="{{rsx.input.title.gender}}">
+                    <option label="{{rsx.label.male}}" value="0"></option>
+                    <option label="{{rsx.label.female}}" value="1"></option>
+                </select>
+
+            </div>
+
+
+        </fieldset>
+        <fieldset>
+            <legend>{{rsx.label.contact}}</legend>
+            <div class="form-group error">
+                <input type="text"
+                       maxlength="15"
+                       name="zipCode"
+                       required
+                       class="form-control"
+                       ng-model="model.address.zipCode"
+                       pattern="[0-9]+"
+                       placeholder="{{rsx.input.placeholder.zipCode}}"
+                       title="{{rsx.input.title.zipCode}}" />
+            </div>
+
+            <div class="form-group error">
+                <textarea type="text"
+                          maxlength="250"
+                          name="street"
+                          id="street"
+                          required
+                          class="form-control"
+                          ng-model="model.address.street"
+                          placeholder="{{rsx.input.placeholder.street}}"
+                          title="{{rsx.input.title.street}}"></textarea>
+            </div>
+
+
+            <div class="form-group">
+
+                <div class="col-lg-8  no-padding">
+                    <input type="text"
+                           maxlength="30"
+                           name="city"
+                           id="city"
+                           required
+                           class="form-control"
+                           ng-model="model.address.city"
+                           placeholder="{{rsx.input.placeholder.city}}"
+                           title="{{rsx.input.title.city}}" />
+                </div>
+                <div class="col-lg-4  ">
+                    <input type="text"
+                           maxlength="2"
+                           name="state"
+                           required
+                           class="form-control"
+                           ng-model="model.address.state"
+                           placeholder="{{rsx.input.placeholder.state}}"
+                           title="{{rsx.input.title.state}}" />
+                </div>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>{{rsx.label.account}}</legend>
+            <div class="form-group error">
+                <input type="email"
+                       maxlength="150"
+                       name="email"
+                       required
+                       inputmode="email"
+                       class="form-control"
+                       ng-model="model.email"
+                       pattern="{{rsx.input.pattern.email}}"
+                       placeholder="{{rsx.input.placeholder.email}}"
+                       title="{{rsx.input.title.email}}" />
+            </div>
+            <div class="form-group">
+                <input type="password"
+                       maxlength="32"
+                       name="senha"
+                       class="form-control"
+                       required
+                       ng-model="model.password"
+                       pattern="{{rsx.input.pattern.password}}"
+                       placeholder="{{rsx.input.placeholder.password}}"
+                       title="{{rsx.input.title.password}}" />
+            </div>
+            <div class="form-group">
+
+                <input type="password"
+                       name="confirmPassword"
+                       id="confirmPassword"
+                       class="form-control"
+                       ng-model="model.confirmPassword"
+                       required
+                       pattern="{{model.password}}"
+                       title="{{rsx.input.title.confirmPassword}}"
+                       placeholder="{{rsx.input.title.confirmPassword}}" />
+            </div>
+        </fieldset>
+    </div>
+    <div class="footer">
+
+        <button type="submit"
+                ng-click="model.register()"
+                class="btn bg-olive btn-block">
+            {{rsx.button.save}}
+        </button>
+        <a href="/oauth/#/" class="text-center">{{rsx.msgs.jaTenhoConta}}</a>
+    </div>
+</form>

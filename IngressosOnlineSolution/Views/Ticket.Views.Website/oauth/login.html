@@ -1,0 +1,50 @@
+﻿<div class="form-box" id="login-box">
+    <div class="header">Sign In</div>
+    <form method="post" name="login" id="login">
+        <div class="body bg-gray">
+            <div class="form-group">
+                <input type="text"
+                       name="email"
+                       id="email"
+                       required
+                       class="form-control"
+                       ng-model="model.email"
+                       title="{{rsx.input.title.email}}"
+                       pattern="{{rsx.input.pattern.email}}"
+                       placeholder="{{rsx.input.placeholder.email}}" />
+            </div>
+            <div class="form-group">
+                <input type="password"
+                       name="senha"
+                       required
+                       class="form-control"
+                       ng-model="model.password"
+                       title="{{rsx.input.title.password}}"
+                       pattern="{{rsx.input.pattern.password}}"
+                       placeholder="{{rsx.input.placeholder.password}}" />
+            </div>
+            <div class="form-group">
+                <input type="checkbox"
+                       ng-model="model.rememberMe"
+                       style="cursor: pointer !important"
+                       name="permanecerConectado" />
+                <span for="permanecerConectado" style="cursor:pointer !important"
+                      onclick="document.forms['login'].permanecerConectado.checked = !document.forms['login'].permanecerConectado.checked">
+                    {{rsx.msgs.permanecerConectado}}
+                </span>
+            </div>
+        </div>
+        <div class="footer">
+            <button type="submit"
+                    ng-click="model.singIn();this.disabled=true;"
+                    class="btn bg-olive btn-block">
+                {{rsx.button.login}}
+            </button>
+
+            <a href="/oauth/#/register" class="text-center">
+                {{rsx.label.register}}
+
+            </a>
+        </div>
+    </form>
+</div>

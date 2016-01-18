@@ -1,0 +1,122 @@
+﻿<div style="max-width: 30%;">
+    <form id="crediCartForm" method="post">
+        <ol class="list-unstyled">
+            <li class="col-lg-12">
+                <dl class="form-group">
+                    <dd>
+                        <label for="name">
+                            {{rsx.label.name}}
+                        </label>
+                    </dd>
+                    <dt>
+                        <input type="text"
+                               class="form-control"
+                               inputmode="latin-name"
+                               id="name"
+                               required
+                               name="name"
+                               ng-model="model.name" />
+                    </dt>
+                </dl>
+            </li>
+            <li class="col-lg-12">
+                <dl class="form-group">
+                    <dd>
+                        <label for="cartNumber">
+                            {{rsx.label.cartNumber}}
+                        </label>
+                    </dd>
+                    <dt>
+                        <input type="text"
+                               class="form-control"
+                               id="cartNumber"
+                               required=""
+                               pattern="([0-9]{16}|\d{4}[ ]\d{4}[ ]\d{4}[ ]\d{4})"
+                               maxlength="19"
+                               name="cartNumber"
+                               ng-model="model.cartNumber" />
+                        <datalist id="cartNumberList">
+                            <option ng-repeat="c in cartNumberList" label="c.cartNumber" value="c.cartNumber"></option>
+                        </datalist>
+                    </dt>
+                </dl>
+
+            </li>
+            <li class="col-lg-6">
+                <dl class="form-group">
+
+                    <dt>
+                        <label for="validMoth">{{rsx.label.validMonth}}</label>
+                    </dt>
+                    <dt>
+
+                        <select ng-model="model.validMoth"
+                                id="validMoth"
+                                name="validMoth"
+                                class="form-control">
+                            <option ng-repeat="i in [1,2,3,4,5,6,7,8,9,10,11,12]"
+                                    value="{{i}}" label="{{i}}"></option>
+                        </select>
+                    </dt>
+                </dl>
+            </li>
+            <li class="col-lg-6">
+                <dl>
+                    <dd>
+                        <label for="validYear">{{rsx.label.validYear}}</label>
+
+                    </dd>
+                    <dt>
+                        <span>
+                            <select ng-model="model.validYear"
+                                    id="validYear"
+                                    name="validYear"
+                                    required
+                                    class="form-control">
+                                <option ng-repeat="year in model.validYears"
+                                        value="{{year}}" label="{{year}}"></option>
+                            </select>
+
+                        </span>
+                    </dt>
+                </dl>
+            </li>
+            <li class="col-lg-6">
+                <dl class="form-group">
+                    <dd>
+
+                        <label for="cartCvv">
+                            {{rsx.label.cvv}}
+                        </label>
+                    </dd>
+                    <dt>
+                        <input type="text"
+                               id="cartCvv"
+                               class="form-control input-sm"
+                               required=""
+                               pattern="[0-9]+"
+                               maxlength="4"
+                               name="cartCvv"
+                               ng-model="model.cartCvv" />
+                    </dt>
+                </dl>
+            </li>
+            <li class="col-lg-6">
+
+                <span>
+                    <input type="checkbox" id="saveCard"
+                           name="saveCard"
+                           ng-model="model.saveCard" />
+                    <label for="saveCard">Save card</label>
+                </span>
+                <input type="submit"
+                       id="btBuy"
+                       ng-click="model.pay()"
+                       class="btn btn-success"
+                       name="btBuy" />
+
+            </li>
+        </ol>
+
+    </form>
+</div>
