@@ -1,27 +1,15 @@
-﻿using System.Data.Entity.Core.Common;
+﻿using System.Data.Entity;
 using System.Data.Entity.SqlServer;
-using System.Diagnostics;
 
 namespace Ticket.DB.EntityFramework
 {
-
-    internal class ContextConfig : System.Data.Entity.DbConfiguration
+    /// <summary>Configuration database provider</summary>
+    public class ContextConfig : DbConfiguration
     {
-
+        /// <summary>Initialize o service to database provider</summary>
         public ContextConfig()
         {
-
-
             SetProviderServices(SqlProviderServices.ProviderInvariantName, SqlProviderServices.Instance);
-
-        }
-
-
-        void Hacker()
-        {
-            var x = SqlProviderServices.Instance;
-            Debug.Write(x);
         }
     }
-
 }

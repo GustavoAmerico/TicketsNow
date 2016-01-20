@@ -50,12 +50,13 @@
                     </dt>
                     <dt>
 
-                        <select ng-model="model.validMoth"
+                        <select ng-model="model.validMonth"
                                 id="validMoth"
                                 name="validMoth"
                                 class="form-control">
-                            <option ng-repeat="i in [1,2,3,4,5,6,7,8,9,10,11,12]"
-                                    value="{{i}}" label="{{i}}"></option>
+                            <option ng-repeat="i in [1,2,3,4,5,6,7,8,9,10,11,12]">
+                                {{i}}
+                            </option>
                         </select>
                     </dt>
                 </dl>
@@ -73,8 +74,9 @@
                                     name="validYear"
                                     required
                                     class="form-control">
-                                <option ng-repeat="year in model.validYears"
-                                        value="{{year}}" label="{{year}}"></option>
+                                <option ng-repeat="year in model.validYears">
+                                    {{year}}
+                                </option>
                             </select>
 
                         </span>

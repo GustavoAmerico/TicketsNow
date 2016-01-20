@@ -1,18 +1,21 @@
 ﻿module Ticket {
     import User = OAuth.User;
 
-    interface NoParamConstructor<T> {
-        new (): T;
-    }
+    /**Abstraction from the home*/
+    class Dashboard {
 
-    export class Dashboard {
+        /**Featured events */
         private _feasts: Feast[] = [];
+
+        /**Featured events 
+         * @returns {'Featured events to diplay in screen'} 
+         */
         get feasts(): Feast[] {
-            return this._feasts;
+            return (this._feasts) ? this._feasts : [];
         }
 
-       
-        /**Configurar essa classe como controle do Angular*/
+
+        /**Add this class how controlller in AngularJs*/
         static configurarAngular(modulo: any): void {
             var controllerName = "DashboardCtrl";
             modulo.factory("loadFeast", ($q) => {
@@ -62,38 +65,237 @@
                         templateUrl: "dashboard.html",
                         controller: controllerName,
                         caseInsensitiveMatch: true
-                    })
+                    });
             });
         }
     }
+    
+    /**Abstraction from the Cart page*/
+    class Cart {
 
-    export class Cart {
+
+        private static dbName = "ShoppingCart";
+
+        /**Model for Credit card*/
+        creditCard = new CreditCard();
+
+        /**Provider DataBase JS */
+        private db: IDBDatabase;      
+
+        /**Singleton instance*/
         private static _instancia: Cart;
 
+        /**It indicates whether x is initialized*/
+        private isStarted = false;
+
+        private static objectStoreName = "requests";
+
+        /**Singleton item*/
         static get instancia() {
             if (Cart._instancia == null)
                 Cart._instancia = new Cart();
             return Cart._instancia;
         }
 
-        private static dbName: string = "ShoppingCart";
-        private static objectStoreName: string = "requests";
-        private db: IDBDatabase;
-        private isStarted: boolean = false;
-
-        creditCard = new CreditCard();
-
-        get requestStore() {
-            var transiction: IDBTransaction = this.db.transaction([Cart.objectStoreName], "readwrite");
-            var objectStore = transiction.objectStore(Cart.objectStoreName);
+        /**Gets an store to executes operation en JS databas */
+        get requestStore(): IDBObjectStore {
+            const transiction = this.db.transaction([Cart.objectStoreName], "readwrite");
+            const objectStore = transiction.objectStore(Cart.objectStoreName);
             return objectStore;
         }
+
 
         constructor() {
             this.openIndexeddb();
         }
 
-        private openIndexeddb() {
+        /**responsible for add, change and remove cart items, is triggered by button add to buy
+         * @param item  item scheduled  modification
+         * @param key key of item
+         * @param exp control for attemps async
+         */
+        addOrUpdate(item: any, key: any, exp = 0): void {
+            if (item == null || key == null)
+                return;
+
+            if (!this.isStarted) {
+                //Se o a conexão com a api do navegador não estiver sido estabelecida é tentado novamente em alguns segundos
+                win.setTimeout(this.addOrUpdate(item, key, (3 + exp)), ((20 + exp) * 1000));
+                return;
+            }
+            var x = this;
+            const func = (i) => {
+                var store = x.requestStore;
+                if (i == null)
+                    store.add(item);
+                else
+                    store.put(item);
+            };
+            this.get(key, func);
+        }
+
+        /** Search for item in JS database
+         * @param key 
+         * @param func function executable before load
+         */
+        get(key: any, func: (e) => void): void {
+            const request = this.requestStore.get(key);
+            request.onsuccess = e => {
+                var cursor = (e.target as IDBRequest).result;
+                func(cursor);
+            };
+        }
+
+        /**It is to treat the recovered items JS database
+        * @param itens 
+         * @returns {} 
+         */
+        onLoadAllRequest: (itens: Feast[]) => void;
+
+        /**Removes the item associated with the id of the cart
+         * @param key ideitification from item in cart
+         * @param onSuccess function that will be performed after removal 
+        */
+        delete(key: any, onSuccess: (e: Event) => void) {
+            const store = this.requestStore;
+            const request = store.delete(key);
+            request.onsuccess = onSuccess;
+        }
+
+
+        /*** get all itens from current user
+           * @returns {all tickets select to buy per user}
+           */
+        loadAllRequest() {
+            const store = this.requestStore;
+            const request = store.openCursor();
+            var list = [];
+            var its = this;
+            request.onerror = (e) => console.log(e);
+            request.onsuccess = (event) => {
+                var cursor: IDBCursorWithValue = (event.target as IDBRequest).result;
+                if (cursor) {
+                    if (cursor.value && cursor.value.qtd > 0)
+                        list.push(cursor.value);
+                    cursor.continue();
+                } else {
+                    try {
+                        if (its.onLoadAllRequest)
+                            its.onLoadAllRequest(list);
+                    } catch (e) {
+                        console.error("your function triggered an error {0}", e);
+                    }
+                }
+            };
+        }
+
+        
+        /**updates the cart with the selected items, it runs after removing an item to access the screen */
+        refresh(): void {
+            var m = this;
+            this.onLoadAllRequest = (list) => {
+                win.$("#shoppingCart tr").remove();
+                list.forEach(x => Cart.addItensInTable(x, m));
+            };
+            this.loadAllRequest();
+
+        }
+
+        /**
+         * Add the @item in htmltableElement reference cart
+         * @param item to be added in HtmlTableElemente
+         * @param cart cart from item 
+         * @returns {} 
+         */
+        static addItensInTable(item: Feast, cart: Cart) {
+            const tableBody = win.$("#shoppingCart")[0];
+            if (tableBody == null || item == null) return;
+            const cellImg = document.createElement("td") as HTMLTableCellElement;
+            const img = document.createElement("img") as HTMLImageElement;
+            img.alt = item.title;
+            img.src = item.image;
+            img.style.maxWidth = "150px";
+            img.style.maxHeight = "90px";
+            cellImg.appendChild(img);
+
+            const celltitle = document.createElement("td") as HTMLTableCellElement;
+            celltitle.innerText = item.title;
+            const cellqtd = document.createElement("td") as HTMLTableCellElement;
+            cellqtd.innerText = item.qtd.toString();
+            const celldescription = document.createElement("td") as HTMLTableCellElement;
+            celldescription.innerText = item.decription;
+
+            const cellprice = document.createElement("td") as HTMLTableCellElement;
+            cellprice.innerText = item.price.toFixed(2);
+
+            const cellaction = document.createElement("td") as HTMLTableCellElement;
+            const btnRemove = document.createElement("input") as HTMLButtonElement;
+            btnRemove.type = "button";
+            btnRemove.value = "remove";
+            btnRemove["eventId"] = item.id;
+
+            btnRemove.onclick = (e) => {
+                var input = e.target as Element;
+                var id = input["eventId"];
+                if (id && cart.delete) {
+                    cart.delete(id, e => input.parentElement.parentElement.parentElement
+                        .removeChild(input.parentElement.parentElement));
+                }
+            };
+            btnRemove.classList.add("btn", "btn-danger");
+            cellaction.appendChild(btnRemove);
+            const row = document.createElement("tr") as HTMLTableRowElement;
+            row.appendChild(cellImg);
+            row.appendChild(celltitle);
+            row.appendChild(celldescription);
+            row.appendChild(cellqtd);
+            row.appendChild(cellprice);
+            row.appendChild(cellaction);
+            tableBody.appendChild(row);
+        }
+
+
+        /**Add this class how controlller in AngularJs*/
+        static configurarAngular(modulo: any): void {
+            var controllerName = "CartCtrl";
+            modulo.controller("CartCtrl", [
+                "$scope", $scope => {
+                    $scope.rsx = win.rsx;
+                    document.title = win.rsx.pageTitles.cart;
+                    try {
+
+                        $scope.model = Cart.instancia;
+                        $scope.model.onLoadAllRequest = (list) => {
+                            win.$("#shoppingCart tr").remove();
+                            list.forEach(x => Cart.addItensInTable(x, $scope.model));
+                        };
+                        $scope.model.loadAllRequest();
+
+                    } catch (e) {
+
+                    }
+                    /**
+                     * add to request in table
+                     * @returns {}
+                     */
+
+                }
+            ]);
+            modulo.config($routeProvider => {
+                $routeProvider
+                    .when("/cart",
+                    {
+                        templateUrl: "cart.html",
+                        controller: controllerName,
+                        caseInsensitiveMatch: true
+                    });
+            });
+
+
+        }
+
+        /**responsible for opening the connection to the IndexedDB*/
+        private openIndexeddb(): void {
             var este = this;
             try {
 
@@ -120,189 +322,16 @@
                 }
 
             } catch (e) {
-                console.error("your browser not suported indexedDb, try again with google chrome");
+                alert("your browser not suported indexedDb, try again with google chrome");
             }
         }
 
-        addOrUpdate(item: any, key: any, exp = 0) {
-            if (item == null || key == null)
-                return;
-
-            if (!this.isStarted) {
-                //Se o a conexão com a api do navegador não estiver sido estabelecida é tentado novamente em alguns segundos
-                win.setTimeout(this.addOrUpdate(item, key, (3 + exp)), ((20 + exp) * 1000));
-                return;
-            }
-            var x = this;
-            const func = (i) => {
-                var store = x.requestStore;
-                if (i == null)
-                    store.add(item);
-                else
-                    store.put(item);
-            };
-            this.get(key, func);
-        }
-
-        get(key: any, func: Function) {
-            const request = this.requestStore.get(key);
-            request.onsuccess = e => {
-                var cursor = (e.target as IDBRequest).result;
-                func(cursor);
-            };
-        }
-
-        itensCurrentUser: any[] = [];
-
-        get itens(): any[] {
-            return this.itensCurrentUser;
-        }
-
-        onLoadAllRequest: Function;
-
-        buy(): void {
-            /*
-           TODO: Implementar verificação de autenticação
-           if (!OAuth.User.instancia.estaLogado())
-               window.location.assign("/oauth/");
-           */
-
-
-
-
-        }
-        /**
-       * get all itens from current user
-       * @returns {all tickets select to buy per user}
-       */
-        loadAllRequest() {
-            var store = this.requestStore;
-
-            var request = store.openCursor();
-            var list = [];
-            var its = this;
-            request.onerror = (e) => console.log(e);
-            request.onsuccess = (event) => {
-                var cursor: IDBCursorWithValue = (event.target as IDBRequest).result;
-                if (cursor) {
-                    if (cursor.value && cursor.value.qtd > 0)
-                        list.push(cursor.value);
-                    cursor.continue();
-                } else {
-                    try {
-                        if (its.onLoadAllRequest)
-                            its.onLoadAllRequest(list);
-                    } catch (e) {
-                        console.error("your function triggered an error {0}", e);
-                    }
-                }
-            };
-        }
-
-        delete(key: any, onSuccess: (e: Event) => void) {
-            const store = this.requestStore;
-            var request = store.delete(key);
-            request.onsuccess = onSuccess;
-        }
-
-        refresh() {
-            var m = this;
-            this.onLoadAllRequest = (list) => {
-                win.$("#shoppingCart  tr").remove();
-                list.forEach(m.addItensInTable);
-            };
-            this.loadAllRequest();
-
-        }
-
-        /**Configurar essa classe como controle do Angular*/
-        static configurarAngular(modulo: any): void {
-            var controllerName = "CartCtrl";
-            modulo.controller("CartCtrl", [
-                "$scope", $scope => {
-                    $scope.rsx = win.rsx;
-                    document.title = win.rsx.pageTitles.cart;
-                    try {
-
-                        $scope.model = Cart.instancia;
-                        $scope.model.onLoadAllRequest = (list) => {
-                            win.$("#shoppingCart  tr").remove();
-                            list.forEach($scope.model.addItensInTable);
-                        };
-                        $scope.model.loadAllRequest();
-
-                    } catch (e) {
-
-                    } 
-                    /**
-                     * add to request in table
-                     * @returns {}
-                     */
-
-                }
-            ]);
-            modulo.config($routeProvider => {
-                $routeProvider
-                    .when("/cart",
-                    {
-                        templateUrl: "cart.html",
-                        controller: controllerName,
-                        caseInsensitiveMatch: true
-                    });
-            });
-
-
-        }
-        addItensInTable(item: Feast) {
-            const tableBody = win.$("#shoppingCart")[0];
-            if (tableBody == null || item == null) return;
-            const cellImg = document.createElement("td") as HTMLTableCellElement;
-            const img = document.createElement("img") as HTMLImageElement;
-            img.alt = item.title;
-            img.src = item.image;
-            img.style.maxWidth = "150px";
-            img.style.maxHeight = "90px";
-            cellImg.appendChild(img);
-
-            const celltitle = document.createElement("td") as HTMLTableCellElement;
-            celltitle.innerText = item.title;
-            const cellqtd = document.createElement("td") as HTMLTableCellElement;
-            cellqtd.innerText = item.qtd.toString();
-            const celldescription = document.createElement("td") as HTMLTableCellElement;
-            celldescription.innerText = item.decription;
-
-            const cellprice = document.createElement("td") as HTMLTableCellElement;
-            cellprice.innerText = item.price.toFixed(2);
-
-            const cellaction = document.createElement("td") as HTMLTableCellElement;
-            var btnRemove = document.createElement("input") as HTMLButtonElement;
-            btnRemove.type = "button";
-            btnRemove.value = "remove";
-            btnRemove["eventId"] = item.id;
-            btnRemove.onclick = (e) => {
-                var input = e.target as Element;
-                var id = input["eventId"];
-                if (id > 0) {
-                    this.delete(id, e=> input.parentElement.parentElement.parentElement
-                        .removeChild(input.parentElement.parentElement));
-                }
-            };
-            btnRemove.classList.add("btn", "btn-danger");
-            cellaction.appendChild(btnRemove);
-
-            var row = document.createElement("tr") as HTMLTableRowElement;
-            row.appendChild(cellImg);
-            row.appendChild(celltitle);
-            row.appendChild(celldescription);
-            row.appendChild(cellqtd);
-            row.appendChild(cellprice);
-            row.appendChild(cellaction);
-            tableBody.appendChild(row);
-        }
 
     }
 
-    export class CreditCard {
+
+    /**Abstraction from the controller to credit card*/
+    class CreditCard {
 
         cartCvv: number;
         validYear: number;
@@ -311,30 +340,36 @@
         saveCard: boolean;
         name: string;
 
-
+        /**generates valid number for validity numbers
+        * @returns {valid number  for year validate of card} 
+         */
         get validYears(): number[] {
-            var currentYear = new Date().getFullYear();
-            var years = [];
-            for (var i = currentYear; i < (currentYear + 8); i++) {
+            const currentYear = new Date().getFullYear();
+            const years = [];
+            for (let i = currentYear; i < (currentYear + 10); i++) {
                 years.push(i);
             }
             return years;
         }
 
-
-
+        /**Runs payment of items in cart*/
         pay() {
-            var form = document.querySelector("#crediCartForm") as HTMLFormElement;
+            const form = document.querySelector("#crediCartForm") as HTMLFormElement;
             if (!form || !form.checkValidity()) {
                 return alert("Form not valid");
             }
+            //TODO: validar preço do pedido com preço atual
 
+            var now = new Date();
+            if (this.validYear < now.getFullYear() || (this.validYear === now.getFullYear() && now.getMonth() + 1 <= this.validMonth))
+                return alert("your card is expired");
 
             var regex = new RegExp("\d+");
 
             var requestsItens = [];
-            Cart.instancia.onLoadAllRequest = (itens) => {
-                for (var i = 0; i < itens.length; i++) {
+
+            var pay = (itens) => {
+                for (let i = 0; i < itens.length; i++) {
                     requestsItens.push({
                         id: itens[i].id,
                         price: itens[i].price,
@@ -351,39 +386,33 @@
                     saveCard: this.saveCard,
                     itens: requestsItens
                 });
-                Ajax.post("/Event/pay", data);
-            }
-            Cart.instancia.loadAllRequest();
 
-            //TODO: validar preço do pedido com preço atual
+                var funcObserver = result => {
 
-      
-        }
+                    if (result.responseText)
+                        alert(result.responseText);
+                    else
+                        alert(result);
 
-        getItensFromPedido() {
-            var requestsItens = [];
-            Cart.instancia.onLoadAllRequest = (itens) => {
-                for (var i = 0; i < itens.length; i++) {
-                    requestsItens.push({
-                        id: itens[i].id,
-                        price: itens[i].price,
-                        qtd: itens[i].qtd
-                    });
                 }
 
-            }
+                Ajax.post("/Event/pay", data, funcObserver, funcObserver);
+            };
+
+            Cart.instancia.onLoadAllRequest = pay;
             Cart.instancia.loadAllRequest();
+
 
         }
     }
 
     export class Feast {
-        id: string = "";
-        title: string = "";
-        decription: string = "";
-        image: string = "";
-        price: number = 0;
-        private _qtd: number = 0;
+        id = "";
+        title = "";
+        decription = "";
+        image = "";
+        price = 0;
+        private _qtd = 0;
 
         get qtd(): number {
             return this._qtd;
@@ -447,6 +476,7 @@
             Feast.configurarAngular(modulo);
             this.configurarCredCartDirective(modulo);
         }
+
         private configurarCredCartDirective(modulo) {
 
             modulo.directive("credit", () => ({
@@ -456,6 +486,7 @@
                 //    link: start
             }));
         }
+
         private initStoreIndexedDb() {
             const start = Cart.instancia;
         }

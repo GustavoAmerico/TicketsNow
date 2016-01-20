@@ -10,7 +10,7 @@ namespace Ticket.Views.HttpApi
 
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-
+             
         }
     }
 }

@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -47,6 +51,8 @@
     <Compile Include="EventCore.cs" />
     <Compile Include="IRequestItemModel.cs" />
     <Compile Include="IRequestModel.cs" />
+    <Compile Include="LogException.cs" />
+    <Compile Include="PaymentMessageServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -54,9 +60,9 @@
       <Project>{2509ef10-aac7-4815-addc-9893ec3d8ad4}</Project>
       <Name>Ticket.DB.EntityFramework</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TIcket.PayMethod\TIcket.PayMethod.csproj">
+    <ProjectReference Include="..\TIcket.PayMethod\Ticket.PayMethod.csproj">
       <Project>{be46a9c2-352e-4dc1-8a46-bddc17300f25}</Project>
-      <Name>TIcket.PayMethod</Name>
+      <Name>Ticket.PayMethod</Name>
     </ProjectReference>
     <ProjectReference Include="..\Ticket\Ticket.csproj">
       <Project>{832b68cc-817d-4ef3-8b2a-b309f9a235fa}</Project>
@@ -64,6 +70,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

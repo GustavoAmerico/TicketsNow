@@ -5,15 +5,11 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Views", "Views", "{C8E4571C-92B8-4CC7-BD5C-E86FBDEF761A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticket.Views.Website", "Views\Ticket.Views.Website\Ticket.Views.Website.csproj", "{A4CC944A-C439-49E0-84E2-24261D2811F8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticket.Views.WebApi", "Views\Ticket.Views.WebApi\Ticket.Views.WebApi.csproj", "{1CA9F22B-4E57-4850-8481-F23696DE98BD}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticket.Oauth", "Domain\Ticket.Oauth\Ticket.Oauth.csproj", "{0FA26876-812E-4E15-8F0D-3735EC3BD9BE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{2DB9D065-3DBA-4E2C-BD05-049CA8B085DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TIcket.PayMethod", "Domain\TIcket.PayMethod\TIcket.PayMethod.csproj", "{BE46A9C2-352E-4DC1-8A46-BDDC17300F25}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticket.PayMethod", "Domain\TIcket.PayMethod\Ticket.PayMethod.csproj", "{BE46A9C2-352E-4DC1-8A46-BDDC17300F25}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticket", "Domain\Ticket\Ticket.csproj", "{832B68CC-817D-4EF3-8B2A-B309F9A235FA}"
 EndProject
@@ -33,20 +29,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "App_Data", "App_Data", "{60
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticket.Views.HttpApi", "Views\Ticket.Views.HttpApi\Ticket.Views.HttpApi.csproj", "{7107590E-146D-4C93-BCE1-2990AD5170B7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticket.Views.Website", "Views\Ticket.Views.Website\Ticket.Views.Website.csproj", "{A4CC944A-C439-49E0-84E2-24261D2811F8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A4CC944A-C439-49E0-84E2-24261D2811F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A4CC944A-C439-49E0-84E2-24261D2811F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A4CC944A-C439-49E0-84E2-24261D2811F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A4CC944A-C439-49E0-84E2-24261D2811F8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1CA9F22B-4E57-4850-8481-F23696DE98BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1CA9F22B-4E57-4850-8481-F23696DE98BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1CA9F22B-4E57-4850-8481-F23696DE98BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1CA9F22B-4E57-4850-8481-F23696DE98BD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0FA26876-812E-4E15-8F0D-3735EC3BD9BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0FA26876-812E-4E15-8F0D-3735EC3BD9BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0FA26876-812E-4E15-8F0D-3735EC3BD9BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -75,13 +65,15 @@ Global
 		{7107590E-146D-4C93-BCE1-2990AD5170B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7107590E-146D-4C93-BCE1-2990AD5170B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7107590E-146D-4C93-BCE1-2990AD5170B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4CC944A-C439-49E0-84E2-24261D2811F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4CC944A-C439-49E0-84E2-24261D2811F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4CC944A-C439-49E0-84E2-24261D2811F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4CC944A-C439-49E0-84E2-24261D2811F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{A4CC944A-C439-49E0-84E2-24261D2811F8} = {C8E4571C-92B8-4CC7-BD5C-E86FBDEF761A}
-		{1CA9F22B-4E57-4850-8481-F23696DE98BD} = {C8E4571C-92B8-4CC7-BD5C-E86FBDEF761A}
 		{0FA26876-812E-4E15-8F0D-3735EC3BD9BE} = {2DB9D065-3DBA-4E2C-BD05-049CA8B085DB}
 		{BE46A9C2-352E-4DC1-8A46-BDDC17300F25} = {2DB9D065-3DBA-4E2C-BD05-049CA8B085DB}
 		{832B68CC-817D-4EF3-8B2A-B309F9A235FA} = {2DB9D065-3DBA-4E2C-BD05-049CA8B085DB}
@@ -90,5 +82,6 @@ Global
 		{7662B563-13BC-4CF1-960A-73281698F3B3} = {3939A080-B0E1-4B35-95C8-CB8CB66D9F92}
 		{607E6178-7DC0-400F-BFAD-1E7A5FDF13F3} = {5DF6748A-AD7A-43F8-9FEC-AEB732098AA7}
 		{7107590E-146D-4C93-BCE1-2990AD5170B7} = {C8E4571C-92B8-4CC7-BD5C-E86FBDEF761A}
+		{A4CC944A-C439-49E0-84E2-24261D2811F8} = {C8E4571C-92B8-4CC7-BD5C-E86FBDEF761A}
 	EndGlobalSection
 EndGlobal

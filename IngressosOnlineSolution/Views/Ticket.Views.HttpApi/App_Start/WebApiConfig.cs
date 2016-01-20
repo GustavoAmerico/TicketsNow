@@ -1,5 +1,7 @@
-﻿using System.Web.Http;
+﻿using System.Linq;
+using System.Web.Http;
 using System.Web.Http.Cors;
+using Microsoft.Owin.Security.OAuth;
 using Newtonsoft.Json.Serialization;
 
 namespace Ticket.Views.HttpApi
@@ -11,7 +13,8 @@ namespace Ticket.Views.HttpApi
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
-
+            config.SuppressDefaultHostAuthentication();
+            config.Filters.Add(new HostAuthenticationFilter(OAuthDefaults.AuthenticationType));
             // Configure Web API to use only bearer token authentication.
 
             // Web API routes
@@ -20,15 +23,20 @@ namespace Ticket.Views.HttpApi
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
+                defaults: new
+                {
+                    controller = "Event",
+                    id = RouteParameter.Optional
+                }
             );
 
             var cors = new EnableCorsAttribute(HostName, "*", "*");
             config.EnableCors(cors);
             config.Formatters.JsonFormatter
-                .SerializerSettings
-                .ContractResolver = new CamelCasePropertyNamesContractResolver();
+                .SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             config.Formatters.Remove(config.Formatters.XmlFormatter);
+
+            //config.Formatters.JsonFormatter.UseDataContractJsonSerializer = true;
         }
     }
 }

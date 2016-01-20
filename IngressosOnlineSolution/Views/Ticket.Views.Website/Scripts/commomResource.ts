@@ -37,7 +37,12 @@
                         success(itens);
                     }
                 }).fail(e => {
-                    error(e.resultText.Message);
+                    if (e.resultJson)
+                        error(e.resultJson);
+                    else if (e.resultText)
+                        error(e.resultText);
+                    else
+                        error(e);
                 });
 
         } catch (e) {
@@ -68,7 +73,18 @@
 
 
 class Cabecalho {
-  
+
+    get singText() {
+        return OAuth.User.instancia.estaLogado() ? "Sing Out" : "Sing In";
+    }
+
+    sing() {
+        //TODO: Implementar o logoff
+        win.location.assign("oauth/");
+
+    }
+
+
     /**Configurar as directivas do angular*/
     static configurarAngular(modulo: any): void {
 
@@ -76,11 +92,12 @@ class Cabecalho {
             win.adminLTE.EnableSidebarToggle();
             scope.oauth = OAuth.User.instancia;
             scope.rsx = win.rsx;
+            scope.model = new Cabecalho();
         };
         modulo.directive("cabecalho", () => ({
             restrict: "E",
             templateUrl: "/controles/header.html",
-            scope: { oauth: "=", rsx: "=" },
+            scope: { oauth: "=", rsx: "=", model: "=" },
             link: start
         }));
     }
@@ -95,7 +112,7 @@ class MeuMenu {
         var start = (scope, elementos, attributes) => {
             MeuMenu.iniciarMenu();
             scope.oauth = OAuth.User.instancia;
-           // scope.rsx = win.rsx;
+            // scope.rsx = win.rsx;
         };
 
         modulo.directive("meumenu", () => ({

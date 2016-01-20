@@ -18,21 +18,6 @@ namespace Ticket.Oauth
         {
 
         }
-        public async Task<ApplicationUser> SingIn(LoginViewModel model, IAuthenticationManager authenticationManager)
-        {
-            var user = await FindAsync(model.Email, model.Password);
-            if (user == null) return null;
-            await SignInAsync(user, model.RememberMe, authenticationManager);
-            return user;
-        }
-
-        private async Task SignInAsync(ApplicationUser user, bool isPersistent, IAuthenticationManager authenticationManager)
-        {
-            authenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-            var identity = await CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
-
-            authenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = isPersistent }, identity);
-        }
 
 
         public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context)
@@ -61,5 +46,25 @@ namespace Ticket.Oauth
             }
             return manager;
         }
+
+
+        public async Task<ApplicationUser> SingIn(LoginViewModel model, IAuthenticationManager authenticationManager)
+        {
+            var user = await FindAsync(model.Email, model.Password);
+            if (user == null) return null;
+            await SignInAsync(user, model.RememberMe, authenticationManager);
+            return user;
+        }
+
+        private async Task SignInAsync(ApplicationUser user, bool isPersistent, IAuthenticationManager authenticationManager)
+        {
+            authenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
+            var identity = await CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
+
+            authenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = isPersistent }, identity);
+        }
+
     }
+
+  
 }

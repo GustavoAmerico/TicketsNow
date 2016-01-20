@@ -17,6 +17,8 @@ namespace Ticket.Oauth
 
         }
 
+        public override string Id { get; set; } = Guid.NewGuid().ToString();
+
         public ApplicationUser(ApplicationUserModel model)
         {
             if (model == null)
@@ -24,12 +26,14 @@ namespace Ticket.Oauth
 
             if (Info == null)
                 Info = new UserInfo();
-
+            Info.Id = Id;
             Info.Address.Add(model.Address);
             Info.Name = model.Name;
             Info.Cpf = model.Cpf;
             Info.BirthDate = model.BirthDate;
             Info.Gender = model.Gender;
+            UserName = Email = model.Email;
+
         }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager, string authenticationType)

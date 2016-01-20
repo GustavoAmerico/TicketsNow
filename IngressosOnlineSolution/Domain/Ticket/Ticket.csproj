@@ -42,13 +42,18 @@
     <Compile Include="Category.cs" />
     <Compile Include="Collections\BaseCollection.cs" />
     <Compile Include="Collections\BaseEnumerable.cs" />
+    <Compile Include="Collections\RequestItemCollection.cs" />
+    <Compile Include="Collections\UserInfoCollection.cs" />
     <Compile Include="Collections\RequestCollection.cs" />
     <Compile Include="Collections\EventCollection.cs" />
+    <Compile Include="DB\IDataProvider.cs" />
     <Compile Include="Event.cs" />
     <Compile Include="EventStatus.cs" />
+    <Compile Include="PaymentMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Request.cs" />
     <Compile Include="RequestItem.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="UserInfo.cs" />
   </ItemGroup>
   <ItemGroup>

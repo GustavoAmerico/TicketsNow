@@ -17,6 +17,7 @@ namespace Ticket
         /// <summary>Gets and sends the identification of <see cref="Request"/></summary>
         public Guid RequestId { get; set; }
 
-     
+        /// <summary>gets and sends number of tickets</summary>
+        public int NumberOfItens { get; set; }
     }
 }

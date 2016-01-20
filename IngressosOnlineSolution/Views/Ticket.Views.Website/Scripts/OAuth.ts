@@ -35,7 +35,7 @@ module OAuth {
         private _senha = "";
 
         nome: string = "Gustavo Américo";
-        id: string = "";
+        id: string = "d76631ed-b995-4e5c-8fbb-16052208db33";
 
         get senha() { return this._senha.trim() }
 
@@ -108,30 +108,22 @@ module OAuth {
         singIn() {
             var form: HTMLFormElement = document.forms["login"];
             if (!form.checkValidity()) return;
-            var route = win.rsx.hostname + "/account/singin";
             var model = this;
-
-            const dataJson = JSON.stringify(model);
-            //TODO: Implementar login
-            const x = (e) => {
-                try {
-                    User.instancia.autenticar(model);
-                    win.location.assign("/#/cart");
-
-                    return;
-
-                    if (e.status == 200) {
-                        User.instancia.autenticar(model);
-                        win.location.assign("/#/cart");
-                    }
-                    else
-                        alert(e.responseText);
-                } catch (ex) {
-                    win.location.assign("/#/cart");
-                }
+            var loginData = {
+                grant_type: "password",
+                username: model.email,
+                password: model.password
             };
 
-            Ajax.post(route, dataJson, x, x);
+            const dataJson = JSON.stringify(loginData);
+            //TODO: Implementar login
+            const x = (e) => {
+                if (e.status === 404)
+                    return alert("Não foi possivel se conectar ao servidor de autenticação");
+                alert(e.message);
+            };
+
+            Ajax.post("/Token", dataJson, User.instancia.autenticar, x);
 
 
 
@@ -198,30 +190,32 @@ module OAuth {
 
         /**Create a user to the system*/
         register(): void {
-            var rota = win.rsx.hostname + "account/register";
+            var form = document.forms["registerForm"] as HTMLFormElement;
+            if (!form || !form.checkValidity()) {
+                console.log("Form not valid");
+                return alert("Check the red form fields");
+            }
             var model = this;
             var dataJson = JSON.stringify(model);
-            var settings = {
-                "async": true,
-                "crossDomain": true,
-                "processData": false,
-                "url": rota,
-                "data": dataJson,
-                "method": "POST",
-                "dataType": "json",
-                "headers": {
-                    "content-type": "application/json",
-                    "cache-control": "no-cache"
-                }
-            }
-            win.$.ajax(settings)
-                .done(this.registered)
-                .fail(this.registered);
+
+            var func = this.registered;
+
+            Ajax.post("/account/register", dataJson, func, func);
         }
 
-        private registered(request) {
+        private registered(request: any): void {
+            if (!request) return;
             if (request.status === 200) {
                 win.location.assign("/oauth");
+            } else {
+
+                var erros = request.responseJSON ? request.responseJSON.modelState : [""];
+                if (!erros || !erros[""] || erros[""].length === 0) return;
+                var msg = "";
+                for (var i = 0; i < erros[""].length; i++) {
+                    msg += erros[""][i];
+                }
+                win.alert(msg);
             }
         }
         /**Configurar essa classe como controle do Angular*/
