@@ -1,4 +1,4 @@
-﻿<div class="col-lg-4" style="max-width: 460px; max-height: 180px; margin: 25px 25px;">
+﻿<div class="col-lg-4">
     <div class="col-lg-4" style="max-width: 150px;max-height: 90px">
         <img style="max-width: 150px;max-height: 90px" src="{{event.image}}" alt="{{event.title}}" />
     </div>
@@ -10,7 +10,10 @@
         <div class="row">
             <label>R$&nbsp; {{event.price * event.qtd}}</label> &nbsp;&nbsp;
             <input type="number" value="1" ng-model="event.qtd" min="0" class="input-sm" pattern="\d+" title="{{numberTickets}}" />
-            <input type="button" ng-click="event.addToBuy()" class="btn btn-default" value="{{rsx.button.addToBuy}}" />
+        </div>
+        <div class="row">
+            <input type="button" ng-click="event.addToBuy()"
+                   class="btn btn-default" value="{{rsx.button.addToBuy}}" />
         </div>
     </div>
 </div>
