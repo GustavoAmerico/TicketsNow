@@ -377,7 +377,6 @@
                     });
                 }
                 var data = JSON.stringify({
-                    userId: User.instancia.id,
                     cardCvv: this.cartCvv,
                     cardNumber: this.cartNumber.replace(regex, ""),
                     validMonth: this.validMonth,

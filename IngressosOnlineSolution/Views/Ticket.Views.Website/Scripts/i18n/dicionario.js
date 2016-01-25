@@ -1,5 +1,5 @@
 ﻿var rsx = {
-    hostname: "/api",
+    hostname: "/api/api",
     nomeApp: "Tickets Now",
     label: {
         validMonth: "Valid month",

@@ -11,7 +11,7 @@
 
         <!-- Sidebar toggle button-->
 
-        <a class="navbar-btn sidebar-toggle" role="button" href="#" data-toggle="offcanvas">
+        <a class="navbar-btn sidebar-toggle" role="button" data-toggle="offcanvas">
 
             <span class="sr-only">Toggle navigation</span>
 
@@ -30,7 +30,7 @@
             <ul class="nav navbar-nav">
                 <!-- User Account: style can be found in dropdown.less -->
                 <li class="dropdown user user-menu">
-                    <a class="dropdown-toggle" href="#" data-toggle="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown">
                         <i class="glyphicon glyphicon-user"></i>
                         <span>{{oauth.nomeUsuario}} <i class="caret"></i></span>
                     </a>
@@ -47,8 +47,9 @@
                         <li class="user-footer">
                             <div class="pull-right">
                                 <a class="btn btn-default btn-flat"
-                                   href="/oauth/"
-                                   ng-click="model.Sing()">{{model.singText}}</a>
+                                   ng-click="model.singOut()">
+                                    {{model.singText}}
+                                </a>
                             </div>
                         </li>
                     </ul>

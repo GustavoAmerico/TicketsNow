@@ -50,9 +50,16 @@
         }
     }
 
-    static post(route: string, dataJson: string, success?: (result) => void, error?: (result) => void) {
+    static post(route: string, dataJson: any, success?: (result) => void, error?: (result) => void, headers?: Object) {
         route = win.rsx.hostname + route;
-        var settings = {
+
+        if (headers == null)
+            headers = {
+                "content-type": "application/json",
+                "cache-control": "no-cache"
+            };
+
+        const settings = {
             "async": true,
             "crossDomain": true,
             "processData": false,
@@ -60,10 +67,30 @@
             "data": dataJson,
             "method": "POST",
             "dataType": "json",
-            "headers": {
-                "content-type": "application/json",
+            "headers": headers
+        }
+        win.$.ajax(settings)
+            .done(success)
+            .fail(error);
+    }
+
+
+    static form(route: string, dataJson: any, success?: (result) => void, error?: (result) => void, header?: Object) {
+        route = win.rsx.hostname + route;
+
+        if (header == null)
+            header = {
+                "content-type": "application/x-www-form-urlencoded",
                 "cache-control": "no-cache"
-            }
+            };
+
+        const settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": route,
+            "data": dataJson,
+            "method": "POST",
+            "headers": header
         }
         win.$.ajax(settings)
             .done(success)
@@ -75,13 +102,14 @@
 class Cabecalho {
 
     get singText() {
-        return OAuth.User.instancia.estaLogado() ? "Sing Out" : "Sing In";
+        const estaLogado = OAuth.User.instancia.estaLogado();
+        return estaLogado
+            ? "Sing Out" : "Sing In";
     }
 
-    sing() {
-        //TODO: Implementar o logoff
+    singOut() {
+        OAuth.User.singOut();
         win.location.assign("oauth/");
-
     }
 
 

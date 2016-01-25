@@ -21,48 +21,40 @@ class Address {
 /// <reference path="Scripts/ticket.js" />
 module OAuth {
     export class User {
+
         private static _intancia = new User();
+        ".expires" = new Date(1, 1, 1);
+
+        ".issued" = new Date(1, 1, 1);
+
+        get issued(): Date { return this[".issued"]; }
+
+        get expires(): Date { return this[".expires"]; }
+
+
+        set issued(value: Date) { this[".issued"] = value; }
+
+        set expires(value: Date) { this[".expires"] = value; }
+
+
+        access_token = "";
 
         /** Nome do usuário que esta logado*/
-        get nomeUsuario(): string { return this.nome }
+        get nomeUsuario(): string { return this.userName }
 
         /**Imagem do usuário*/
         avatar = "http://icons.iconarchive.com/icons/icons-land/flat-emoticons/256/Ninja-icon.png";
 
-        private static storageKey = "oauth_user";
 
-        private _email = "";
-        private _senha = "";
+        userName = "anonymous";
 
-        nome: string = "Gustavo Américo";
-        id: string = "d76631ed-b995-4e5c-8fbb-16052208db33";
-
-        get senha() { return this._senha.trim() }
-
-        set senha(valor: string) {
-            if (valor == null) valor = "";
-            this._senha = valor;
-        }
-
-        get email() { return this._email.trim() }
-
-        set email(valor: string) {
-            if (valor == null) valor = "";
-            this._email = valor;
-        }
-
-        constructor() {
-            const userJson = win.localStorage.getItem(User.storageKey);
-            User.fromJson(userJson, this);
-        }
 
         static fromJson(json: string, user?: User): User {
             if (!user) user = new User();
             if (!json) return user;
-
-            var data = JSON.parse(json);
-            for (var attr in data)
-                if (User.hasOwnProperty(attr))
+            const data = JSON.parse(json);
+            for (let attr in data)
+                if (user.hasOwnProperty(attr))
                     user[attr] = data[attr];
             return user;
         }
@@ -71,64 +63,100 @@ module OAuth {
             return User._intancia;
         }
 
-        autenticar(model: Object): void {
-            //TODO: Implementar o login
-            window.localStorage["user"] = { nome: this.nome, image: this.avatar, id: "" }
-            if (!model) return;
-            for (var item in model) {
-                if (this.hasOwnProperty(item))
-                    this[item] = model[item];
-            }
-            window.localStorage["user"] = model;
-
-        }
-
         estaLogado(): boolean {
-            return this.id !== "" && window.localStorage["user"];
+            if (!this.expires || this.access_token == null)
+                return false;
+
+            const hoje = new Date();
+            var expira = new Date(this.expires.valueOf());
+
+            let inPeriod = expira >= hoje;
+            return (inPeriod && this.access_token != null);
         }
 
-        parse() {
-            return {
-                email: this.email,
-                nome: this.nomeUsuario,
-                avatar: this.avatar,
-                key: this.id
-            }
+        static singOut() {
+            window.localStorage.clear();
+            window.sessionStorage.clear();
         }
+
     }
 
     class Login {
 
-        password: string = "";
+        password = "";
 
-        email: string = "";
+        email = "";
 
-        remeberMe: boolean = false;
+        remeberMe = false;
+
+        private static storageKey = "oauth_user";
 
         singIn() {
-            var form: HTMLFormElement = document.forms["login"];
+            const form: HTMLFormElement = document.forms["login"];
             if (!form.checkValidity()) return;
-            var model = this;
-            var loginData = {
-                grant_type: "password",
-                username: model.email,
-                password: model.password
+
+            const loginData = {
+                username: this.email,
+                password: this.password,
+                grant_type: "password"
             };
 
-            const dataJson = JSON.stringify(loginData);
-            //TODO: Implementar login
-            const x = (e) => {
-                if (e.status === 404)
-                    return alert("Não foi possivel se conectar ao servidor de autenticação");
-                alert(e.message);
-            };
 
-            Ajax.post("/Token", dataJson, User.instancia.autenticar, x);
+            Ajax.form("/Token", loginData, this.authenticate, this.authenticateFail);
 
 
 
         }
-         
+
+        authenticateFail(response) {
+            switch (response.status) {
+                case 400:
+                    return alert("Bad Request, your sender dada not valid");
+
+                case 404:
+                    return alert("Não foi possivel se conectar ao servidor de autenticação"); break;
+                case 500:
+                    return alert(response.messageText);
+
+                    break;
+                default:
+                    if (response.message)
+                        alert(response.message); break;
+            }
+        }
+
+        authenticate(model: Object): void {
+            if (!model) return;
+            window.localStorage.clear();
+            window.sessionStorage.clear();
+
+            const storage = this.remeberMe
+                ? window.localStorage
+                : window.sessionStorage;
+
+            var json = JSON.stringify(model);
+
+            storage[Login.storageKey] = json;
+            User.fromJson(json, User.instancia);
+            window.location.assign("/");
+        }
+
+        static loadLocalAuthenticate() {
+
+            let user = window.localStorage[Login.storageKey];
+            if (user == null)
+                user = window.sessionStorage[Login.storageKey];
+            if (user != null)
+                User.fromJson(user, User.instancia);
+            //else {
+            //    return alert("A problem was found when logging in, please try again");
+            //}
+        }
+
+        static singOut() {
+            window.localStorage.clear();
+            window.sessionStorage.clear();
+        }
 
         /**Configurar essa classe como controle do Angular*/
         static configurarAngular(modulo: any): void {
@@ -195,29 +223,41 @@ module OAuth {
                 console.log("Form not valid");
                 return alert("Check the red form fields");
             }
-            var model = this;
-            var dataJson = JSON.stringify(model);
+            const model = this;
+            const dataJson = JSON.stringify(model);
 
-            var func = this.registered;
-
-            Ajax.post("/account/register", dataJson, func, func);
-        }
-
-        private registered(request: any): void {
-            if (!request) return;
-            if (request.status === 200) {
+            const success = () => {
+                alert("you have been successfully registered");
                 win.location.assign("/oauth");
-            } else {
+            };
+            const error = (request) => {
+                if (!request) return;
+                switch (request.status) {
+                    case 500:
+                        {
+                            const error: any = request.responseJSON;
 
-                var erros = request.responseJSON ? request.responseJSON.modelState : [""];
-                if (!erros || !erros[""] || erros[""].length === 0) return;
-                var msg = "";
-                for (var i = 0; i < erros[""].length; i++) {
-                    msg += erros[""][i];
+                            if (error == null || !error.message)
+                                return alert("Internal error");
+                            else
+                                return alert(`Internal error: ${error.message}`);
+                        }
+                    default:
+                        const erros = request.responseJSON ? request.responseJSON.modelState : [""];
+
+                        if (!erros || !erros[""] || erros[""].length === 0) return;
+
+                        let msg = "";
+                        for (let i = 0; i < erros[""].length; i++) {
+                            msg += erros[""][i];
+                        } win.alert(msg); break;
                 }
-                win.alert(msg);
-            }
+            };
+
+            Ajax.post("/account/register", dataJson, success, error);
         }
+         
+
         /**Configurar essa classe como controle do Angular*/
         static configurarAngular(modulo: any): void {
             var controllerName = "RegisterCtrl";
@@ -244,6 +284,7 @@ module OAuth {
     class Start {
         run() {
             this.startAngularJs();
+            Login.loadLocalAuthenticate();
         }
 
         private startAngularJs() {
