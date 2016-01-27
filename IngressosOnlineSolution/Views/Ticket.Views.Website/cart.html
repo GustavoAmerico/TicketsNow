@@ -2,7 +2,7 @@
 <table class="table">
     <caption>
         <a ng-click="model.refresh()"
-            class="fa fa-1x fa-refresh right"></a> &nbsp;&nbsp;
+           class="fa fa-1x fa-refresh right"></a> &nbsp;&nbsp;
         {{rsx.label.shoppingCart}}
 
     </caption>
@@ -19,10 +19,30 @@
     <tbody id="shoppingCart"></tbody>
     <tfoot>
         <tr>
-            <td colspan="6">
-                <credit rsx="rsx" model="model.creditCard"></credit>
+            <td colspan="4">
+                <label>
+                    {{rsx.label.total}}
+                </label>
+            </td>
+            <td colspan="2">
+                <b>
+                    <span class="text-red">
+                        R$ &nbsp;{{model.totalPrice.toFixed(2)}}
+                    </span>
+                </b>
             </td>
         </tr>
+
     </tfoot>
 
 </table>
+<div ng-show="{{exibirPagamento===false}}" class="form-group">
+    <span class="right">
+        You need to <a href="/oauth/" class="btn btn-success">login</a> or
+        <a href="/oauth/#/register" class="btn btn-success">register</a> to checkout
+    </span>
+</div>
+<div ng-show="{{exibirPagamento}}">
+    <credit rsx="rsx" model="model.creditCard"></credit>
+
+</div>

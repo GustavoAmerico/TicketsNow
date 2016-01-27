@@ -34,6 +34,8 @@
 
 
             });
+
+
             modulo.controller("DashboardCtrl", [
                 "$scope", "loadFeast", ($scope, loadFeast) => {
                     $scope.rsx = win.rsx;
@@ -104,6 +106,7 @@
             return objectStore;
         }
 
+        totalPrice: number;
 
         constructor() {
             this.openIndexeddb();
@@ -171,22 +174,27 @@
             const request = store.openCursor();
             var list = [];
             var its = this;
+            var allPrice = 0;
             request.onerror = (e) => console.log(e);
             request.onsuccess = (event) => {
                 var cursor: IDBCursorWithValue = (event.target as IDBRequest).result;
                 if (cursor) {
-                    if (cursor.value && cursor.value.qtd > 0)
+                    if (cursor.value && cursor.value.qtd > 0) {
                         list.push(cursor.value);
+                        allPrice += (cursor.value.price * cursor.value.qtd);
+                    }
                     cursor.continue();
                 } else {
                     try {
                         if (its.onLoadAllRequest)
                             its.onLoadAllRequest(list);
+                        its.totalPrice = allPrice;
                     } catch (e) {
                         console.error("your function triggered an error {0}", e);
                     }
                 }
             };
+
         }
 
         
@@ -262,9 +270,9 @@
                 "$scope", $scope => {
                     $scope.rsx = win.rsx;
                     document.title = win.rsx.pageTitles.cart;
+                    $scope.model = Cart.instancia;
+                    $scope.exibirPagamento = OAuth.User.instancia.estaLogado();
                     try {
-
-                        $scope.model = Cart.instancia;
                         $scope.model.onLoadAllRequest = (list) => {
                             win.$("#shoppingCart tr").remove();
                             list.forEach(x => Cart.addItensInTable(x, $scope.model));
@@ -274,10 +282,6 @@
                     } catch (e) {
 
                     }
-                    /**
-                     * add to request in table
-                     * @returns {}
-                     */
 
                 }
             ]);
