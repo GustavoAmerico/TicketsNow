@@ -1,8 +1,10 @@
 ﻿<div class="form-group">
 
+    <table class="table table-responsive">
+        <caption>
+            {{rsx.titulosPg.myRequest}}
 
-    <table>
-        <caption></caption>
+        </caption>
         <thead>
             <tr>
                 <th>
@@ -14,9 +16,25 @@
                 <th>
                     {{rsx.label.total}}
                 </th>
-                <th>{{rsx.laber.satus}}</th>
+                <th>{{rsx.label.status}}</th>
             </tr>
         </thead>
-    </table>
 
+        <tbody>
+            <tr ng-repeat="r in requests">
+                <td>
+                    {{r.requestNumber}}
+                </td>
+                <td>
+                    {{r.description}}
+                </td>
+                <td>
+                    {{r.total}}
+                </td>
+                <th>{{r.status}}</th>
+            </tr>
+
+        </tbody>
+    </table>
+  
 </div>

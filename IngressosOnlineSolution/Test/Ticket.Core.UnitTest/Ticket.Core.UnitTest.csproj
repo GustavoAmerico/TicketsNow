@@ -71,11 +71,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\TimeNow.mdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Folder Include="App_Data\" />
   </ItemGroup>
-  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

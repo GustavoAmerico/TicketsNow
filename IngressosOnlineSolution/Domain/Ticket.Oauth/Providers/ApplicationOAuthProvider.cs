@@ -29,7 +29,18 @@ namespace Ticket.Oauth.Providers
 
             var userManager = context.OwinContext.GetUserManager<ApplicationUserManager>();
 
-            ApplicationUser user = await userManager.FindAsync(context.UserName, context.Password);
+            ApplicationUser user;
+            try
+            {
+                user = await userManager
+                                   .FindAsync(context.UserName, context.Password);
+            }
+            catch (Exception ex)
+            {
+                context.SetError("001", "the system can't valid your account.");
+                return;
+            }
+
 
             if (user == null)
             {

@@ -1,10 +1,8 @@
 ﻿<!DOCTYPE html>
-
 <html lang="pt-br">
 <head>
     <meta charset="utf-8" />
     <title>Tickets Web</title>
-
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- bootstrap 3.0.2 -->
     <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css">
@@ -23,30 +21,29 @@
     <script src="/Scripts/main/jquery.min.js"></script>
     <script src="/Scripts/main/bootstrap.min.js"></script>
     <script src="Scripts/main/app.js"></script>
-
     <script src="Scripts/main/angular.min.js" type="text/javascript"></script>
     <script src="Scripts/main/angular-route.min.js"></script>
 
-    <script src="/Scripts/domextent.js"></script>
-    <script src="/Scripts/i18n/dicionario.js"></script>
-    <script src="/Scripts/OAuth.js"></script>
 
-    <script src="/Scripts/commomResource.js"></script>
-
-    <script src="/Scripts/ticket.js"></script>
 </head>
 <body class="skin-blue" ng-app="app">
-    <cabecalho rsx="rsx" class="header"></cabecalho>
+    <myheader rsx="rsx" class="header" oauth="oauth"></myheader>
     <div class="wrapper row-offcanvas row-offcanvas-left">
-        <meumenu rsx="rsx"></meumenu>
+        <mymenu rsx="rsx" oauth="oauth"></mymenu>
         <aside class="right-side">
             <section class="content">
                 <div ng-view></div>
-                
+
             </section>
         </aside>
     </div>
-
-
+    <script src="/Scripts/domextent.js"></script>
+    <script src="/Scripts/i18n/dicionario.js"></script>
+    <script src="/Scripts/ticket.js"></script>
+    <script type="text/javascript">
+        var ang = new Ticket.AppStart();
+        ang.run();
+        window["startApp"] = ang;
+    </script>
 </body>
 </html>

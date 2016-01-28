@@ -28,15 +28,18 @@
         cart: "Cart",
         dashboard: "Home",
         usuarios: "Usuários",
+        myRequest: "Requests"
     },
     pageTitles: {
         home: "Home - Tickets Now",
         cart: "Cart - Tickets Now",
         login: "Login - Tickets Now",
-        register: "Register - Tickets Now"
+        register: "Register - Tickets Now",
+        myRequest: "My request - Tickets Now"
     },
     titulosPg: {
-        Registrese: "Register"
+        Registrese: "Register",
+        myRequest: "Requests Status"
     },
     input: {
         title: {
@@ -92,37 +95,27 @@
         },
     }
 };
-var eventos = [
+var requests = [
     {
-        id: 1,
-        title: "Titulo do Evento I",
-        description: "Vivamus rhoncus venenatis diam, id fringilla dolor vestibulum in. Donec luctus commodo consectetur. Curabitur euismod sapien non velit fermentum scelerisque. Nullam cursus ipsum id augue pulvinar porttitor.",
-        image: "https://acqualokos.files.wordpress.com/2013/03/capao_fest.png",
-        price: 150.50
+        requestNumber: "1",
+        description: "LOIRA ipsum",
+        total: 98.21,
+        status: "Create"
     }, {
-        id: 2,
-        title: "Tituolo do Evento II",
-        description: "Descrição do evento II",
-        image: "https://acqualokos.files.wordpress.com/2013/03/capao_fest.png",
-        price: 250.01
+        requestNumber: "2",
+        description: "LOIRA ipsum",
+        total: 98.21,
+        status: "Deleted"
     }, {
-        id: 3,
-        title: "Tituolo do Evento III",
-        description: "Vivamus rhoncus venenatis diam, id fringilla dolor vestibulum in. Donec luctus commodo consectetur. Curabitur euismod sapien non velit fermentum scelerisque. Nullam cursus ipsum id augue pulvinar porttitor.",
-        image: "https://acqualokos.files.wordpress.com/2013/03/capao_fest.png",
-        price: 350.00
+        requestNumber: "3",
+        description: "LOIRA ipsum",
+        total: 98.21,
+        status: "Any"
     }, {
-        id: 4,
-        title: "Tituolo do Evento IV",
-        description: "Vivamus rhoncus venenatis diam, id fringilla dolor vestibulum in. Donec luctus commodo consectetur. Curabitur euismod sapien non velit fermentum scelerisque. Nullam cursus ipsum id augue pulvinar porttitor.",
-        image: "https://acqualokos.files.wordpress.com/2013/03/capao_fest.png",
-        price: 450.00
-    },
-    {
-        id: 5,
-        title: "Tituolo do Evento V",
-        description: "Vivamus rhoncus venenatis diam, id fringilla dolor vestibulum in. Donec luctus commodo consectetur. Curabitur euismod sapien non velit fermentum scelerisque. Nullam cursus ipsum id augue pulvinar porttitor.",
-        image: "https://acqualokos.files.wordpress.com/2013/03/capao_fest.png",
-        price: 550.00
+        requestNumber: "5",
+        description: "LOIRA ipsum",
+        total: 98.21,
+        status: "All"
     }
+
 ];
