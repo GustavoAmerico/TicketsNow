@@ -20,7 +20,9 @@
         account: "Account",
         name: "Name",
         cartNumber: "Number of Card",
-        cvv: "CVV"
+        cvv: "CVV",
+        requestNumber: "Number of request",
+        status: "Status"
     },
     menu: {
         cart: "Cart",

@@ -2,13 +2,15 @@
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security.OAuth.Messages;
 using Ticket.Core;
 using Ticket.Views.HttpApi.Models;
 
 namespace Ticket.Views.HttpApi.Controllers
 {
-    [RoutePrefix("api/event")]
-    [AllowAnonymous]
+    [RoutePrefix("api/event"), Authorize]
+
     public class EventController : ApiController
     {
         private EventCore _core;
@@ -17,6 +19,7 @@ namespace Ticket.Views.HttpApi.Controllers
 
 
         // GET api/<controller>
+        [AllowAnonymous]
         [HttpGet]
         public HttpResponseMessage Get()
         {
@@ -37,8 +40,11 @@ namespace Ticket.Views.HttpApi.Controllers
         {
             try
             {
+                var id = User.Identity.GetUserId();
+                request.UserId = new Guid(id);
+
                 Core.BuyAsync(request);
-                return Ok("Your request as be processa");
+                return Ok("Your request has been successfully processed and send your email");
             }
             catch (Exception ex)
             {

@@ -53,12 +53,14 @@
     static post(route: string, dataJson: any, success?: (result) => void, error?: (result) => void, headers?: Object) {
         route = win.rsx.hostname + route;
 
+        var user = OAuth.User.instancia;
         if (headers == null)
             headers = {
                 "content-type": "application/json",
                 "cache-control": "no-cache"
             };
 
+        headers["Authorization"] = user.token_type + " " + user.access_token;
         const settings = {
             "async": true,
             "crossDomain": true,

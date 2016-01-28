@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using GatewayApiClient;
 using GatewayApiClient.DataContracts;
+using GatewayApiClient.DataContracts.EnumTypes;
 
 namespace Ticket.PayMethod
 {
@@ -21,6 +22,7 @@ namespace Ticket.PayMethod
             {
                 AmountInCents = (long)(request.Total * 100),
                 TransactionReference = request.Id.ToString(),
+                InstallmentCount = 1,
                 //Options = new CreditCardTransactionOptions
                 //{TODO: Verificar pra que serve
                 //    IsNotificationEnabled = true,
@@ -35,6 +37,8 @@ namespace Ticket.PayMethod
         public void Pay(Card newCard)
         {
             _transaction.CreditCard = newCard.Copiar<Card, CreditCard>();
+            _transaction.CreditCard.CreditCardBrand = CreditCardBrandEnum.Mastercard;
+
             Pay();
         }
 
@@ -44,8 +48,10 @@ namespace Ticket.PayMethod
 
             try
             {
+                var key = new Guid("5e62ba71-73d4-4ca0-8c03-26d1f78d6c71");
+                const string link = "https://sandbox.mundipaggone.com";
                 // Creates the client that will send the transaction.
-                var serviceClient = new GatewayServiceClient();
+                var serviceClient = new GatewayServiceClient(key, new Uri(link));
 
 
                 // Cria requisição.

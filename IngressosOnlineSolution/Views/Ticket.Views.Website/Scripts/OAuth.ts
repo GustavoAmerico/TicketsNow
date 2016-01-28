@@ -36,7 +36,7 @@ module OAuth {
 
         set expires(value: Date) { this[".expires"] = value; }
 
-
+        token_type = "";
         access_token = "";
 
         /** Nome do usuário que esta logado*/
@@ -111,7 +111,11 @@ module OAuth {
         authenticateFail(response) {
             switch (response.status) {
                 case 400:
-                    return alert("Bad Request, your sender dada not valid");
+                    {
+                        if (response.responseJSON && response.responseJSON.error_description)
+                            return alert(response.responseJSON.error_description);
+                        return alert("Bad Request, your sender dada not valid");
+                    }
 
                 case 404:
                     return alert("Não foi possivel se conectar ao servidor de autenticação"); break;

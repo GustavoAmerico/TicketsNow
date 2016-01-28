@@ -27,6 +27,12 @@
                     <span>{{rsx.menu.cart}}</span>
                 </a>
             </li>
+            <li ng-show="{{oauth.estaLogado()}}">
+            <a href="/#/cart">
+            <i class="fa fa-th"></i>
+            <span>{{rsx.menu.cart}}</span>
+            </a>
+            </li>
         </ul>
     </section>
     <!-- /.sidebar -->

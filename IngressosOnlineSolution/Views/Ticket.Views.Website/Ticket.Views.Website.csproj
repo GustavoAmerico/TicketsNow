@@ -37,6 +37,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="fonts\ionicons.svg" />
     <Content Include="index.html" />
+    <Content Include="MyRequest.html" />
     <Content Include="oauth\index.html" />
     <Content Include="oauth\login.html" />
     <Content Include="oauth\register.html" />
