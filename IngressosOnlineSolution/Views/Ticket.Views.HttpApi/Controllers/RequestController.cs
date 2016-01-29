@@ -13,9 +13,9 @@ namespace Ticket.Views.HttpApi.Controllers
 
     public class RequestController : ApiController
     {
-        private EventCore _core;
+        private RequestCore _core;
 
-        private EventCore Core => _core ?? (_core = new EventCore());
+        private RequestCore Core => _core ?? (_core = new RequestCore());
 
 
         [HttpGet]
@@ -23,7 +23,10 @@ namespace Ticket.Views.HttpApi.Controllers
         {
             try
             {
+                var userId = User.Identity.GetUserId<string>();
+
                 var events = Core.AllOpen();
+
                 return Request.CreateResponse(HttpStatusCode.OK, events);
             }
             catch (Exception ex)

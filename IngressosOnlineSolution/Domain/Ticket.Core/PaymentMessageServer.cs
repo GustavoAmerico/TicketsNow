@@ -7,7 +7,7 @@ namespace Ticket.Core
     {
         private SmtpClient _smtp;
 
-        private SmtpClient Smtp => _smtp ?? (_smtp = new SmtpClient());
+        private SmtpClient Smtp => _smtp ?? (_smtp = new SmtpClient("smtp.sendgrid.net"));
 
         public void OnCompleted()
         {

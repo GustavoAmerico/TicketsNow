@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Ticket.DB;
 using Ticket.DB.EntityFramework;
@@ -8,9 +8,10 @@ using Ticket.PayMethod;
 
 namespace Ticket.Core
 {
-    internal class RequestCore
+    public class RequestCore
     {
         private static PaymentMessageServer _messageServer;
+
         private readonly IRequestContext _context;
 
         /// <summary>Observador de transações</summary>
@@ -27,6 +28,20 @@ namespace Ticket.Core
             _context = new Repository();
         }
 
+        /// <summary>filters out requests from a User</summary>
+        /// <param name="userId">identification from user</param>
+        /// <returns>Filters out requests from a User</returns>
+        /// <exception cref="ArgumentNullException">It occurs when the User identifier is not filled</exception>
+        public void GetByUser(string userId)
+        {
+            Contract.EnsuresOnThrow<ArgumentNullException>(string.IsNullOrWhiteSpace(userId), "The User identifier can not be null");
+
+            var requests = _context.Requests.Find(userId);
+           
+
+
+        }
+
         /// <summary>makes the purchase of tickets</summary>
         /// <param name="model">Request</param>
         public void Buy(IRequestModel model)
@@ -36,7 +51,6 @@ namespace Ticket.Core
                 throw new InvalidOperationException("Request need ticket(s)");
             var creditCard = new PayCreditCard(request);
             creditCard.Subscribe(MessageServer);
-            // creditCard.Payment += actor.Tell;
 
             var card = new Card
             {
