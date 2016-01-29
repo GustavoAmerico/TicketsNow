@@ -20,7 +20,7 @@ class Address {
 
 /// <reference path="Scripts/i18n/dicionario.js" />
 module Ticket {
-    
+
     class Ajax {
 
 
@@ -71,12 +71,12 @@ module Ticket {
             try {
                 win.$.ajax(Ajax.getSettings("GET", win.rsx.hostname + route))
                     .done((result, status) => {
-                        if (status === 'success') {
+                        if (status === "success") {
                             if (typeConstructor == null) {
                                 success(result);
                             }
                             else {
-                                success(Ajax.createTypeArray<T>(typeConstructor, result))
+                                success(Ajax.createTypeArray<T>(typeConstructor, result));
                             }
                         }
                     }).fail(e => {
@@ -198,9 +198,15 @@ module Ticket {
                 var controllerName = "MyRequestCtrl";
                 modulo.controller(controllerName, [
                     "$scope", "oAuth", ($scope, oAuth) => {
-                        document.title = win.rsx.pageTitles.myRequest;
                         $scope.oauth = oAuth.oauth();
-                        $scope.requests = win.requests;
+                        if (!$scope.oauth.IsAutentication)
+                            win.location.assing("/");
+
+                        document.title = win.rsx.pageTitles.myRequest;
+                        MyRequest.getAll(result=> $scope.requests = result, e=> {
+                            console.log(e);
+                            alert(e);
+                        });
                     }
                 ]);
                 modulo.config($routeProvider => {
@@ -214,8 +220,9 @@ module Ticket {
                 });
             }
 
-            GetAll() {
-                return win.requests;
+            static getAll(onsucess: (result: any[]) => void, onerror: (erro: any) => void) {
+
+                Ajax.get<MyRequest>("/request", onsucess, onerror, () => new MyRequest());
             }
 
         }
@@ -623,7 +630,7 @@ module Ticket {
 
                     }
 
-                    Ajax.post("/Event/pay", data, funcObserver, funcObserver);
+                    Ajax.post("/request", data, funcObserver, funcObserver);
                 };
 
                 Controls.Cart.instancia.onLoadAllRequest = pay;
@@ -748,6 +755,7 @@ module Ticket {
 
     module OAuth {
         export class User {
+            private static storageKey = "oauth_user";
 
             private static _intancia = new User();
             ".expires" = new Date(1, 1, 1);
@@ -775,6 +783,14 @@ module Ticket {
 
             userName = "anonymous";
 
+            constructor() {
+                var json = window.sessionStorage[User.storageKey];
+                if (json == null)
+                    json = window.localStorage[User.storageKey];
+
+                User.fromJson(json, this);
+
+            }
 
             static fromJson(json: string, user?: User): User {
                 if (!user) user = new User();

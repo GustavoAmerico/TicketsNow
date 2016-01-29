@@ -54,6 +54,8 @@
     <Compile Include="LogException.cs" />
     <Compile Include="PaymentMessageServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RequestCore.cs" />
+    <Compile Include="RequestView.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\DataBase\Ticket.DB.EntityFramework\Ticket.DB.EntityFramework.csproj">

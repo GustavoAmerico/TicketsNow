@@ -38,5 +38,10 @@ namespace Ticket
         {
             Itens = itens;
         }
+
+        public bool Any()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
