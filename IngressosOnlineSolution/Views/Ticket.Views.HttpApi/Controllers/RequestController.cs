@@ -18,14 +18,14 @@ namespace Ticket.Views.HttpApi.Controllers
         private RequestCore Core => _core ?? (_core = new RequestCore());
 
 
-        [HttpGet]
+        [HttpGet, Route]
         public HttpResponseMessage Get()
         {
             try
             {
                 var userId = User.Identity.GetUserId<string>();
 
-                var events = Core.AllOpen();
+                var events = Core.GetByUser(userId);
 
                 return Request.CreateResponse(HttpStatusCode.OK, events);
             }
@@ -41,7 +41,10 @@ namespace Ticket.Views.HttpApi.Controllers
         {
             try
             {
-                var id = User.Identity.GetUserId();
+                if (request == null)
+                    return BadRequest("your request is invalid");
+
+                var id = User.Identity.GetUserId<string>();
                 request.UserId = new Guid(id);
 
                 Core.BuyAsync(request);

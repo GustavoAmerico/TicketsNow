@@ -1,5 +1,4 @@
 ﻿/// <autosync enabled="true" />
-/// <reference path="domextent.js" />
 /// <reference path="main/angular.min.js" />
 /// <reference path="main/angular-route.min.js" />
 /// <reference path="main/app.js" />

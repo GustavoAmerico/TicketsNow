@@ -21,12 +21,22 @@ namespace Ticket.Views.HttpApi
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(
-                name: "DefaultApi",
+                name: "DefaultApiWithParameters",
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new
                 {
                     controller = "Event",
-                    id = RouteParameter.Optional
+                    id = 1
+                }
+            );
+
+
+            config.Routes.MapHttpRoute(
+                name: "DefaultApi",
+                routeTemplate: "api/{controller}",
+                defaults: new
+                {
+                    controller = "Event",
                 }
             );
 

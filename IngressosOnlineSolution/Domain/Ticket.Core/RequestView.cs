@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Ticket.Core
 {
-    internal class RequestView
+    public class RequestView
     {
         private Request _request;
 
@@ -11,27 +11,21 @@ namespace Ticket.Core
         {
             _request = request;
 
+            var requestView = _request.Itens
+                .Select(i => $"{i.NumberOfItens} tickets for {i.Event.Title}")
+                .ToArray();
+
+            Description = requestView.Any()
+                ? requestView.Aggregate((c, r) => $"{c} <br/> {r}")
+                : "No itens for this request";
         }
 
         public DateTime Date => _request.Date;
 
 
-        public string Description
-        {
-            get
-            {
-                var resquest = _request.Itens.Select(i => $"{i.NumberOfItens} tickets for {i.Event.Title}");
-                if (!_request.Any()) return "No itens for this request";
-                return resquest.Aggregate((c, r) => $"{c} <br/> {r}");
-
-            }
-        }
+        public string Description { get; }
 
         public string Number => _request.Id.ToString();
-
-
-        public string Status { get; set; }
-
 
 
         public decimal Total => _request.Total;

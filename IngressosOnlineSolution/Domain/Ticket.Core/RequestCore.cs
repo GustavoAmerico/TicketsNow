@@ -32,13 +32,15 @@ namespace Ticket.Core
         /// <param name="userId">identification from user</param>
         /// <returns>Filters out requests from a User</returns>
         /// <exception cref="ArgumentNullException">It occurs when the User identifier is not filled</exception>
-        public void GetByUser(string userId)
+        public RequestView[] GetByUser(string userId)
         {
             Contract.EnsuresOnThrow<ArgumentNullException>(string.IsNullOrWhiteSpace(userId), "The User identifier can not be null");
 
-            var requests = _context.Requests.Find(userId);
-           
+            var requests = _context.Requests.Find(userId)
+                .Select(r => new RequestView(r))
+                .ToArray();
 
+            return requests;
 
         }
 

@@ -141,7 +141,7 @@ $(function () {
         radioClass: 'iradio_minimal'
     });
 
-     
+
 });
 function fix_sidebar() {
     //Make sure the body tag has the .fixed class
@@ -1078,3 +1078,11 @@ window.IniciarPluginAdminLTE = function () {
 
     adminLTE.ActivateTooltips();
 }
+
+if (String.prototype.format == null || String.prototype.format == undefined)
+    String.prototype.format = function () {
+        var args = arguments;
+        return this.replace(/{(\d+)}/g, (match, number) => {
+            return typeof args[number] == "undefined" ? match : args[number];
+        });
+    };

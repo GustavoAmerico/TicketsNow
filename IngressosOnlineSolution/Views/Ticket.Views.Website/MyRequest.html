@@ -26,11 +26,11 @@
         <tbody>
             <tr ng-repeat="r in requests">
                 <td>
-                    {{r.id}}
+                    {{r.number}}
                 </td>
                 <td>{{r.date}}</td>
                 <td>
-                    {{r.description}}
+                    <p ng-bind="$parent.$eval(r.description)"></p>
                 </td>
                 <td>
                     {{r.total}}

@@ -41,7 +41,6 @@
     <Content Include="oauth\index.html" />
     <Content Include="oauth\login.html" />
     <Content Include="oauth\register.html" />
-    <Content Include="Scripts\DOMExtent.js" />
     <Content Include="Scripts\i18n\dicionario.js" />
     <Content Include="Scripts\main\angular-route.min.js" />
     <Content Include="Scripts\main\angular.min.js" />
@@ -52,6 +51,8 @@
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Scripts\core.ts" />
+    <TypeScriptCompile Include="Scripts\oauth.ts" />
     <TypeScriptCompile Include="Scripts\ticket.ts" />
   </ItemGroup>
   <ItemGroup>
@@ -65,6 +66,8 @@
     <Content Include="fonts\ionicons.eot" />
     <Content Include="fonts\ionicons.ttf" />
     <Content Include="fonts\ionicons.woff" />
+    <None Include="ticketsnow - FTP.pubxml" />
+    <None Include="ticketsnow - Web Deploy.pubxml" />
     <None Include="ticketsnow.pubxml" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
@@ -104,14 +107,14 @@
     <TypeScriptSourceMap>true</TypeScriptSourceMap>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Optimize>true</Optimize>
-    <TypeScriptTarget>ES6</TypeScriptTarget>
+    <TypeScriptTarget>ES5</TypeScriptTarget>
     <TypeScriptJSXEmit>React</TypeScriptJSXEmit>
     <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
     <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
     <TypeScriptModuleKind>None</TypeScriptModuleKind>
     <TypeScriptOutFile />
     <TypeScriptOutDir />
-    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
     <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
     <TypeScriptMapRoot />
     <TypeScriptSourceRoot />
