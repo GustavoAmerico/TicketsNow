@@ -32,7 +32,7 @@ namespace Ticket.Oauth
             Info.Cpf = model.Cpf;
             Info.BirthDate = model.BirthDate;
             Info.Gender = model.Gender;
-            UserName = Email = model.Email;
+            Info.Email = UserName = Email = model.Email;
 
         }
 

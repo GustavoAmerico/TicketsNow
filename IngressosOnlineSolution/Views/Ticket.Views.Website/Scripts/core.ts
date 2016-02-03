@@ -9,10 +9,10 @@ class Ajax {
     private static getSettings(method: string, route: string, dataJson?: string) {
         var user = User.instancia;
         var headers = {
-          "content-type": "application/json",
-                "cache-control": "no-cache",
-                "Authorization": user.token_type + " " + user.access_token
-         };
+            "content-type": "application/json",
+            "cache-control": "no-cache",
+            "Authorization": user.token_type + " " + user.access_token
+        };
         var settings = {
             "async": true,
             "crossDomain": true,
@@ -74,7 +74,7 @@ class Ajax {
     }
 
     static post(route: string, dataJson: any, success?: (result) => void, error?: (result) => void, headers?: Object) {
-        win.$.ajax(Ajax.getSettings("POST", win.rsx.hostname + route), dataJson)
+        win.$.ajax(Ajax.getSettings("POST", win.rsx.hostname + route, dataJson))
             .done(success)
             .fail(error);
     }

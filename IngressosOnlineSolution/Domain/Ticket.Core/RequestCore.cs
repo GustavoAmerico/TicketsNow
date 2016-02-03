@@ -50,7 +50,11 @@ namespace Ticket.Core
         {
             var request = SaveRequest(model);
             if (request == null)
-                throw new InvalidOperationException("Request need ticket(s)");
+            {
+                MessageServer.OnError(new InvalidOperationException("Request need ticket(s)"));
+                return;
+            }
+
             var creditCard = new PayCreditCard(request);
             creditCard.Subscribe(MessageServer);
 
@@ -95,9 +99,7 @@ namespace Ticket.Core
                     throw new InvalidOperationException("Not found user selected");
                 request.User = user;
                 _context.Requests.Add(request);
-
                 var result = _context.SaveChange();
-
                 return request;
             }
             catch (Exception ex)

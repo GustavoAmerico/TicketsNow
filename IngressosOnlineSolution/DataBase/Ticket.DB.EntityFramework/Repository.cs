@@ -49,7 +49,7 @@ namespace Ticket.DB.EntityFramework
 
         int IRepositotyBase.SaveChange()
         {
-            throw new NotImplementedException();
+            return SaveChange();
         }
     }
 }

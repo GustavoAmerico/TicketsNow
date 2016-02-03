@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Ticket
@@ -39,9 +38,6 @@ namespace Ticket
             Itens = itens;
         }
 
-        public bool Any()
-        {
-            throw new NotImplementedException();
-        }
+ 
     }
 }

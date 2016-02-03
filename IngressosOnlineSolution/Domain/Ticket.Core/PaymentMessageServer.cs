@@ -21,7 +21,7 @@ namespace Ticket.Core
         public async void OnNext(PaymentMessage message)
         {
             if (message.Email == null) return;
-            var mail = new MailMessage("gag@gustavoamerico.net", message.Email) { Body = message.ToString() };
+            var mail = new MailMessage("noreplay@ticketsnow.net", message.Email) { Body = message.ToString() };
             await Smtp.SendMailAsync(mail);
         }
     }

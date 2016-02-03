@@ -41,8 +41,8 @@ namespace Ticket.Views.HttpApi.Controllers
         {
             try
             {
-                if (request == null)
-                    return BadRequest("your request is invalid");
+                if (request == null || !ModelState.IsValid)
+                    return BadRequest("your request is invalid, check required field");
 
                 var id = User.Identity.GetUserId<string>();
                 request.UserId = new Guid(id);

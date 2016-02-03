@@ -8,9 +8,13 @@ namespace Ticket.Views.HttpApi.Models
     {
         private RequestItemModel[] _itens;
 
+        [Required]
         public int CardCvv { get; set; }
 
+        [Required]
         public string CardNumber { get; set; }
+
+        IRequestItemModel[] IRequestModel.Itens => Itens;
 
         public RequestItemModel[] Itens
         {
@@ -18,15 +22,17 @@ namespace Ticket.Views.HttpApi.Models
             set { _itens = value; }
         }
 
+        [Required]
         public string Name { get; set; }
 
         public bool SaveCard { get; set; }
 
-        [Required]
         public Guid UserId { get; set; }
-        public int ValidMonth { get; set; }
-        public int ValidYear { get; set; }
 
-        IRequestItemModel[] IRequestModel.Itens => Itens;
+        [Required]
+        public int ValidMonth { get; set; }
+
+        [Required]
+        public int ValidYear { get; set; }
     }
 }

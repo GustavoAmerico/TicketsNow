@@ -1,9 +1,7 @@
 ﻿<div class="form-group">
-
     <table class="table table-responsive">
         <caption>
             {{rsx.titulosPg.myRequest}}
-
         </caption>
         <thead>
             <tr>
@@ -22,7 +20,6 @@
                 <th>{{rsx.label.status}}</th>
             </tr>
         </thead>
-
         <tbody>
             <tr ng-repeat="r in requests">
                 <td>
@@ -30,15 +27,13 @@
                 </td>
                 <td>{{r.date}}</td>
                 <td>
-                    <p ng-bind="$parent.$eval(r.description)"></p>
+                    <p>{{r.description}}</p>
                 </td>
                 <td>
                     {{r.total}}
                 </td>
                 <th>{{r.status}}</th>
             </tr>
-
         </tbody>
     </table>
-
 </div>
