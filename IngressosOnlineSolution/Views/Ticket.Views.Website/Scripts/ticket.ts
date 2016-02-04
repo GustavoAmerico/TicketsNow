@@ -438,7 +438,46 @@ module Ticket {
                 }
             }
 
+            /**Runs payment of items in cart*/
+            pay() {
+                var form = document.querySelector("#crediCartForm") as HTMLFormElement;
+                if (!form || !form.checkValidity()) {
+                    return alert("Form not valid");
+                }
+                //TODO: validar preço do pedido com preço atual
 
+             
+                var requestsItens = [];
+
+                var pay = (itens) => {
+                    for (let i = 0; i < itens.length; i++) {
+                        requestsItens.push({
+                            id: itens[i].id,
+                            price: itens[i].price,
+                            qtd: itens[i].qtd
+                        });
+                    }
+                    var data = JSON.stringify({
+                        itens: requestsItens
+                    });
+
+                    var funcObserver = result => {
+
+                        if (result.responseText)
+                            alert(result.responseText);
+                        else
+                            alert(result);
+
+                    }
+
+                    Ajax.post("/request/BuyOnClick", data, funcObserver, funcObserver);
+                };
+
+                Controls.Cart.instancia.onLoadAllRequest = pay;
+                Controls.Cart.instancia.loadAllRequest();
+
+
+            }
         }
 
     }

@@ -1,5 +1,5 @@
 ﻿using System.Text;
-
+using System;
 namespace Ticket
 {
     /// <summary>Encapsulete message from provider of payment</summary>
@@ -13,11 +13,12 @@ namespace Ticket
         public string Message { get; set; }
 
         /// <summary>Gets and sends Message code</summary>
-
         public int MessageCode { get; set; }
 
         /// <summary>Gets and sends email from user relatead</summary>
         public string Email { get; set; }
+
+        public Guid InstantBuyKey { get; set; }
 
         /// <summary>Returns a string that represents the current object.</summary>
         /// <returns>A string that represents the current object.</returns>
@@ -26,7 +27,7 @@ namespace Ticket
         {
             var text = new StringBuilder();
             if (StatusCode != 200)
-                text.AppendLine($"ErroCode:{MessageCode}</br>");
+                text.AppendLine($"ErroCode:{MessageCode} </br> ");
             text.AppendLine(Message);
 
             return text.ToString();

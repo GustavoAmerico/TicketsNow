@@ -35,6 +35,19 @@ namespace Ticket.Views.HttpApi.Controllers
             }
         }
 
+        [HttpPost, Route("BuyOnClick")]
+        public IHttpActionResult BuyOnClick([FromBody] RequestOnClickModel request)
+        {
+            if (request == null || !ModelState.IsValid)
+                return BadRequest("your request is invalid, check required field");
+
+            var id = User.Identity.GetUserId<string>();
+            request.UserId = new Guid(id);
+
+            Core.BuyAsync(request);
+            return Ok("Your request has been successfully processed and send your email");
+
+        }
 
         [HttpPost, Route]
         public IHttpActionResult Post([FromBody] RequestModel request)

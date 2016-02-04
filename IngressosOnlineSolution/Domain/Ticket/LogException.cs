@@ -1,10 +1,15 @@
 using System;
 using System.Net.Mail;
 using System.Runtime.CompilerServices;
-namespace Ticket.Core
+namespace Ticket
 {
     public static class LogException
     {
+
+        static string emailToNotify = "contato@gustavoamerico.net";
+        static string host = "smtp.sendgrid.net";
+
+
         public static void LogAndThrow(this Exception exception,
             [CallerMemberName]string memberName = "",
             [CallerFilePath]string file = "", [CallerLineNumber]int lineNumber = 0)
@@ -27,8 +32,8 @@ namespace Ticket.Core
             if (string.IsNullOrEmpty(msg)) return;
             try
             {
-                var smtp = new SmtpClient("smtp.sendgrid.net");
-                smtp.SendAsync("noreplay@ticketsnow.net", "contato@gustavoamerico.net", "Erro no TimeNow", msg, Guid.NewGuid().ToString());
+                var smtp = new SmtpClient(host);
+                smtp.SendAsync("noreplay@ticketsnow.net", emailToNotify, "Erro no TimeNow", msg, Guid.NewGuid().ToString());
 
             }
             catch (Exception)

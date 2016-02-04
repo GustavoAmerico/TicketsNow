@@ -216,6 +216,7 @@
     </Compile>
     <Compile Include="Models\RequestModel.cs" />
     <Compile Include="Models\RequestItemModel.cs" />
+    <Compile Include="Models\RequestOnClickModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

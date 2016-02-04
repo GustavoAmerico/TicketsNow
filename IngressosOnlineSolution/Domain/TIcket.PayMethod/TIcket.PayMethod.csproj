@@ -48,10 +48,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Card.cs" />
-    <Compile Include="MundiPaggClient.cs" />
+    <Compile Include="IOrder.cs" />
+    <Compile Include="ICreditCard.cs" />
     <Compile Include="CreditCardBrand.cs" />
-    <Compile Include="PayCreditCard.cs" />
+    <Compile Include="MundiPaggClient.cs" />
+    <Compile Include="Order.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

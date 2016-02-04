@@ -35,8 +35,9 @@ namespace Ticket.Oauth.Providers
                 user = await userManager
                                    .FindAsync(context.UserName, context.Password);
             }
-            catch (Exception )
+            catch (Exception ex)
             {
+                LogException.LogAndThrow(ex);
                 context.SetError("001", "the system can't valid your account.");
                 return;
             }

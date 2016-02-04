@@ -14,6 +14,8 @@ namespace Ticket.Core
 
         private readonly IRequestContext _context;
 
+        private UserInfo _userFromRequest;
+
         /// <summary>Observador de transações</summary>
         internal static PaymentMessageServer MessageServer
             => _messageServer ?? (_messageServer = new PaymentMessageServer());
@@ -26,6 +28,35 @@ namespace Ticket.Core
         public RequestCore()
         {
             _context = new Repository();
+        }
+
+        /// <summary>makes the purchase of tickets</summary>
+        /// <param name="model">Request</param>
+        /// <exception cref="InvalidOperationException">Ocorre quando não há itens no pedido</exception>
+        public void Buy(IBuyOnCard model)
+        {
+            var request = SaveRequest(model);
+            var card = new CardOfCredit(model);
+            Buy(card, request, model.SaveCard);
+        }
+
+        /// <exception cref="InvalidOperationException">Ocorre quando não há itens no pedido</exception>
+        public void BuyAsync(IBuyOnClick model)
+        {
+            var request = SaveRequest(model);
+            if (!request.User.InstantBuyKey.HasValue)
+                throw new InvalidOperationException("Your not have an card configution");
+
+            var card = new CardOfCredit(request.User.InstantBuyKey.Value);
+            Buy(card, request, false);
+        }
+
+        /// <summary>makes the purchase of tickets</summary>
+        /// <param name="model">Request</param>
+        /// <exception cref="InvalidOperationException">Ocorre quando não há itens no pedido</exception>
+        public Task BuyAsync(IBuyOnCard model)
+        {
+            return Task.Factory.StartNew(() => Buy(model));
         }
 
         /// <summary>filters out requests from a User</summary>
@@ -41,46 +72,36 @@ namespace Ticket.Core
                 .ToArray();
 
             return requests;
-
         }
 
-        /// <summary>makes the purchase of tickets</summary>
-        /// <param name="model">Request</param>
-        public void Buy(IRequestModel model)
+        private void Buy(CardOfCredit card, Request request, bool saveCard)
         {
-            var request = SaveRequest(model);
-            if (request == null)
-            {
-                MessageServer.OnError(new InvalidOperationException("Request need ticket(s)"));
-                return;
-            }
+            card.Subscribe(MessageServer);
 
-            var creditCard = new PayCreditCard(request);
-            creditCard.Subscribe(MessageServer);
-
-            var card = new Card
+            var gateway = new MundiPaggClient();
+            gateway.OnCreated += (msg) =>
             {
-                CreditCardNumber = model.CardNumber,
-                ExpMonth = model.ValidMonth,
-                ExpYear = model.ValidYear.ToString().Substring(2).ToInt32(),
-                HolderName = model.Name,
-                SecurityCode = model.CardCvv.ToString()
+                if (saveCard)
+                {
+                    _userFromRequest.InstantBuyKey = msg.InstantBuyKey;
+                    _context.SaveChange();
+                }
+                card.Notificar(msg);
             };
-
-            creditCard.Pay(card);
+            gateway.OnError += card.Notificar;
+            var priceInCents = (long)request.Total * 100;
+            gateway.Pay(new Order(priceInCents,
+                request.Id.ToString(), _userFromRequest.Email), card);
         }
 
-        /// <summary>makes the purchase of tickets</summary>
-        /// <param name="model">Request</param>
-        public Task BuyAsync(IRequestModel model)
-        {
-            return Task.Factory.StartNew(() => Buy(model));
-        }
-
-        private Request SaveRequest(IRequestModel model)
+        /// <exception cref="InvalidOperationException">Ocorre quando não há itens no pedido</exception>
+        /// <returns></returns>
+        private Request SaveRequest(IBuyOnClick model)
         {
             if (model == null || model.Itens.IsNullOrEmpty())
-                return null;
+                throw new InvalidOperationException("Request need ticket(s)");
+
+            Contract.EndContractBlock();
 
             var itens = model.Itens
                 .Select(x => new RequestItem

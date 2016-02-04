@@ -4,7 +4,6 @@
         <a ng-click="model.refresh()"
            class="fa fa-1x fa-refresh right"></a> &nbsp;&nbsp;
         {{rsx.label.shoppingCart}}
-
     </caption>
     <thead>
         <tr>
@@ -19,7 +18,7 @@
     <tbody id="shoppingCart"></tbody>
     <tfoot>
         <tr>
-            <td colspan="4">
+            <td colspan="3">
                 <label>
                     {{rsx.label.total}}
                 </label>
@@ -31,10 +30,17 @@
                     </span>
                 </b>
             </td>
+            <td>
+
+                <input type="submit"
+                       value="Pay On-Click"
+                       id="btBuy"
+                       ng-click="model.pay()"
+                       class="btn btn-success"
+                       name="btBuy" />
+            </td>
         </tr>
-
     </tfoot>
-
 </table>
 <div ng-show="{{exibirPagamento===false}}" class="form-group">
     <span class="right">
@@ -44,5 +50,4 @@
 </div>
 <div ng-show="{{exibirPagamento}}">
     <credit rsx="rsx" model="model.creditCard"></credit>
-
 </div>

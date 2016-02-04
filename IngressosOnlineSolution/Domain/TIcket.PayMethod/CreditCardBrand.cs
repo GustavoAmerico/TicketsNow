@@ -1,4 +1,4 @@
-﻿namespace TIcket.PayMethod
+﻿namespace Ticket.PayMethod
 {
     public enum CreditCardBrand
     {

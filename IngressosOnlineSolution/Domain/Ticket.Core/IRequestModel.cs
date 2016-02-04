@@ -1,17 +1,21 @@
-﻿using System;
-
-namespace Ticket.Core
+﻿namespace Ticket.Core
 {
-    public interface IRequestModel
+    public interface IBuyOnCard : IBuyOnClick
     {
-        int CardCvv { get; set; }
-        string CardNumber { get; set; }
-        IRequestItemModel[] Itens { get; }
+        int CardCvv { get; }
 
-        string Name { get; set; }
-        bool SaveCard { get; set; }
-        Guid UserId { get; set; }
-        int ValidMonth { get; set; }
-        int ValidYear { get; set; }
+        string CardNumber { get; }
+
+        int CreditCardBrand { get; }
+
+        int InstallmentCount { get; }
+
+        string Name { get; }
+
+        bool SaveCard { get; }
+
+        int ValidMonth { get; }
+
+        int ValidYear { get; }
     }
 }

@@ -51,6 +51,7 @@
     <Compile Include="DB\IRequestContext.cs" />
     <Compile Include="Event.cs" />
     <Compile Include="EventStatus.cs" />
+    <Compile Include="LogException.cs" />
     <Compile Include="PaymentMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Request.cs" />

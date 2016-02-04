@@ -4,7 +4,7 @@ using Ticket.Core;
 
 namespace Ticket.Views.HttpApi.Models
 {
-    public class RequestModel : Core.IRequestModel
+    public class RequestModel : IBuyOnCard
     {
         private RequestItemModel[] _itens;
 
@@ -14,7 +14,7 @@ namespace Ticket.Views.HttpApi.Models
         [Required]
         public string CardNumber { get; set; }
 
-        IRequestItemModel[] IRequestModel.Itens => Itens;
+        IRequestItemModel[] IBuyOnCard.Itens => Itens;
 
         public RequestItemModel[] Itens
         {
@@ -34,5 +34,12 @@ namespace Ticket.Views.HttpApi.Models
 
         [Required]
         public int ValidYear { get; set; }
+
+        public int InstallmentCount { get; set; } = 1;
+
+        [Required]
+        public int CreditCardBrand { get; set; }
+
+        public Guid? InstantBuyKey { get; set; }
     }
 }
