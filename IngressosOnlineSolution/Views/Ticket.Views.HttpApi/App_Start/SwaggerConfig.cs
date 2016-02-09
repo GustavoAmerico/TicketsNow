@@ -9,11 +9,13 @@ namespace Ticket.Views.HttpApi
 {
     public class SwaggerConfig
     {
+        protected SwaggerConfig() { }
+
         public static void Register()
         {
-            var thisAssembly = typeof(SwaggerConfig).Assembly;
+            //    var thisAssembly = typeof(SwaggerConfig).Assembly;
 
-            GlobalConfiguration.Configuration 
+            GlobalConfiguration.Configuration
                 .EnableSwagger(c =>
                     {
                         // By default, the service root url is inferred from the request used to access the docs.

@@ -38,7 +38,7 @@ namespace Ticket.Core
         {
         }
 
-        public CardOfCredit(IBuyOnCard model)
+        public CardOfCredit(IBuyOnCard model) : this((IBuyOnClick)model)
         {
             CreditCardBrand = model.CreditCardBrand;
             CreditCardNumber = model.CardNumber;
@@ -49,10 +49,15 @@ namespace Ticket.Core
             HolderName = model.Name;
             InstallmentCount = model.InstallmentCount;
             SecurityCode = model.CardCvv.ToString();
-            if (model.InstantBuyKey != null && model.InstantBuyKey != new Guid())
-                InstantBuyKey = model.InstantBuyKey;
+
         }
 
+        public CardOfCredit(IBuyOnClick model)
+        {
+            if (model.InstantBuyKey != null && model.InstantBuyKey != new Guid())
+                InstantBuyKey = model.InstantBuyKey;
+
+        }
         public CardOfCredit(Guid instantBuyKey)
         {
             InstallmentCount = 1;

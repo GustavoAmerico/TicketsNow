@@ -1,20 +1,28 @@
-﻿using System.Web.Mvc;
+﻿using System.Diagnostics.Contracts;
+using System.Web.Mvc;
 
 namespace Ticket.Views.HttpApi
 {
-    using Core;
     public class FilterConfig
     {
+        protected FilterConfig() { }
+
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
+            if (filters == null) return;
+
+            Contract.EndContractBlock();
+
             filters.Add(new GenericException());
         }
 
-        class GenericException : HandleErrorAttribute
+        internal class GenericException : HandleErrorAttribute
         {
             public override void OnException(ExceptionContext filterContext)
             {
+                if (filterContext == null) return;
 
+                Contract.EndContractBlock();
                 filterContext.Exception.RegisterException();
                 base.OnException(filterContext);
             }

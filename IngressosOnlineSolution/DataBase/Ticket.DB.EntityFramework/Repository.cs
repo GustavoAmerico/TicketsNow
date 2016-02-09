@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data.Entity.Infrastructure;
 using Ticket.Collections;
-using System.Linq;
 namespace Ticket.DB.EntityFramework
 {
     public class Repository : IRequestContext

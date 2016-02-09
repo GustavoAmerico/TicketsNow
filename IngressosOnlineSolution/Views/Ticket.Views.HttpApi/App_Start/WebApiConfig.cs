@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using System.Diagnostics.Contracts;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using Microsoft.Owin.Security.OAuth;
@@ -12,6 +12,9 @@ namespace Ticket.Views.HttpApi
 
         public static void Register(HttpConfiguration config)
         {
+            if (config == null) return;
+
+            Contract.EndContractBlock();
             // Web API configuration and services
             config.SuppressDefaultHostAuthentication();
             config.Filters.Add(new HostAuthenticationFilter(OAuthDefaults.AuthenticationType));

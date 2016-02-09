@@ -119,6 +119,7 @@
     <TypeScriptMapRoot />
     <TypeScriptSourceRoot />
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <CodeAnalysisRuleSet>..\..\..\..\..\TFS\Nuget\SystemExtent\Recursos da Solução\Geral.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <TypeScriptRemoveComments>true</TypeScriptRemoveComments>

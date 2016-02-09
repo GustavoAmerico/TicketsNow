@@ -3,6 +3,7 @@
     nomeApp: "Tickets Now",
     label: {
         validMonth: "Valid month",
+        date: "Date",
         validYear: "Valid year",
         shoppingCart: "Shopping Cart",
         title: "Title",

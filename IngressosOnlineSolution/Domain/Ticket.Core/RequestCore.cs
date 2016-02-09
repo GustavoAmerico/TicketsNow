@@ -69,6 +69,7 @@ namespace Ticket.Core
 
             var requests = _context.Requests.Find(userId)
                 .Select(r => new RequestView(r))
+                .OrderByDescending(x=>x.Date)
                 .ToArray();
 
             return requests;
@@ -115,10 +116,10 @@ namespace Ticket.Core
 
             try
             {
-                var user = _context.UsersInfo.FindOrDefault(model.UserId);
-                if (user == null)
+              _userFromRequest = _context.UsersInfo.FindOrDefault(model.UserId);
+                if (_userFromRequest == null)
                     throw new InvalidOperationException("Not found user selected");
-                request.User = user;
+                request.User = _userFromRequest;
                 _context.Requests.Add(request);
                 var result = _context.SaveChange();
                 return request;

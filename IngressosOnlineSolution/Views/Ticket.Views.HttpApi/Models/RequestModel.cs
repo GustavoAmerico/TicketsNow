@@ -14,7 +14,7 @@ namespace Ticket.Views.HttpApi.Models
         [Required]
         public string CardNumber { get; set; }
 
-        IRequestItemModel[] IBuyOnCard.Itens => Itens;
+        IRequestItemModel[] IBuyOnClick.Itens => Itens;
 
         public RequestItemModel[] Itens
         {

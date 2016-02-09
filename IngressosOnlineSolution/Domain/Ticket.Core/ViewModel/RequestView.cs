@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 
 namespace Ticket.Core
@@ -18,9 +17,12 @@ namespace Ticket.Core
             Description = requestView.Any()
                 ? requestView.Aggregate((c, r) => $"{c} <br/> {r}")
                 : "No itens for this request";
+
+            Date = _request.Date.ToString("dd/MM/yyy HH:mm");
         }
 
-        public DateTime Date => _request.Date;
+        /// <summary>Gets a date</summary>
+        public string Date { get; }
 
 
         public string Description { get; }

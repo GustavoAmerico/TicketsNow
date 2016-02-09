@@ -3,7 +3,6 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
-using Microsoft.Owin.Security.OAuth.Messages;
 using Ticket.Core;
 using Ticket.Views.HttpApi.Models;
 
@@ -43,8 +42,17 @@ namespace Ticket.Views.HttpApi.Controllers
 
             var id = User.Identity.GetUserId<string>();
             request.UserId = new Guid(id);
+            try
+            {
 
-            Core.BuyAsync(request);
+                Core.BuyAsync(request);
+
+            }
+            catch (InvalidOperationException ex)
+            {
+
+                return BadRequest(ex.GetBaseException().Message);
+            }
             return Ok("Your request has been successfully processed and send your email");
 
         }

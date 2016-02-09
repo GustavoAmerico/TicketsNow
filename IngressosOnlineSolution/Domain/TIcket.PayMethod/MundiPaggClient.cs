@@ -20,7 +20,7 @@ namespace Ticket.PayMethod
             var key = new Guid("5e62ba71-73d4-4ca0-8c03-26d1f78d6c71");
             const string link = "https://sandbox.mundipaggone.com";
             // Creates the client that will send the transaction.
-            var serviceClient = new GatewayServiceClient(key, new Uri(link));
+            _serviceClient = new GatewayServiceClient(key, new Uri(link));
         }
 
         public void Pay(IOrder order, params ICreditCard[] cards)
@@ -92,15 +92,25 @@ namespace Ticket.PayMethod
         private IEnumerable<CreditCardTransaction> Generate(IOrder order, ICreditCard[] cards)
         {
             if (cards.IsNullOrEmpty()) yield break;
-
+            var countCard = cards.Count();
             foreach (var card in cards)
             {
                 var transaction = new CreditCardTransaction
                 {
-                    AmountInCents = order.AmountInCents,
+                    /*Divide o total da compra pelo número de cartões enviados*/
+                    AmountInCents = order.AmountInCents / countCard,
                     TransactionReference = order.TransactionReference,
                     InstallmentCount = card.InstallmentCount
                 };
+                if (card.InstantBuyKey.HasValue && card.InstantBuyKey.Value != Guid.Empty)
+                {
+                    transaction.CreditCard = new CreditCard()
+                    {
+                        InstantBuyKey = card.InstantBuyKey.Value
+                    };
+                    yield return transaction;
+                    continue; 
+                }
                 transaction.CreditCard = card.Copiar<ICreditCard, CreditCard>();
                 Contract.Assert(card.CreditCardBrand.HasValue);
                 GatewayApiClient.DataContracts.EnumTypes.CreditCardBrandEnum brand;

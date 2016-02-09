@@ -1,5 +1,5 @@
 ﻿<div class="form-group">
-    <table class="table table-responsive">
+    <table class="table table-responsive fc-grid">
         <caption>
             {{rsx.titulosPg.myRequest}}
         </caption>
@@ -9,7 +9,7 @@
                     {{rsx.label.requestNumber}}
                 </th>
                 <th>
-                    {{rsx.label.data}}
+                    {{rsx.label.date}}
                 </th>
                 <th>
                     {{rsx.label.description}}
@@ -17,7 +17,7 @@
                 <th>
                     {{rsx.label.total}}
                 </th>
-                <th>{{rsx.label.status}}</th>
+
             </tr>
         </thead>
         <tbody>
@@ -25,14 +25,16 @@
                 <td>
                     {{r.number}}
                 </td>
-                <td>{{r.date}}</td>
                 <td>
-                    <p>{{r.description}}</p>
+                    {{r.date}}
+                </td>
+                <td>
+                    {{r.description}}
                 </td>
                 <td>
                     {{r.total}}
                 </td>
-                <th>{{r.status}}</th>
+
             </tr>
         </tbody>
     </table>

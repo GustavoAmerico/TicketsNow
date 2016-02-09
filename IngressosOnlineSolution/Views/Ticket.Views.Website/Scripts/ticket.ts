@@ -101,7 +101,7 @@ module Ticket {
                 Ajax.get<MyRequest>("/request", onsucess, e=> console.log(e), () => new MyRequest());
             }
 
-            date: Date;
+            date: any = "";
             description = "";
             number = "";
             total = 0;
@@ -272,7 +272,8 @@ module Ticket {
             delete(key: any, onSuccess: (e: Event) => void) {
                 var store = this.requestStore;
                 var request = store.delete(key);
-                request.onsuccess = onSuccess;
+                if (onSuccess != null) request.onsuccess = onSuccess;
+                this.refresh();
             }
 
 
@@ -440,15 +441,9 @@ module Ticket {
 
             /**Runs payment of items in cart*/
             pay() {
-                var form = document.querySelector("#crediCartForm") as HTMLFormElement;
-                if (!form || !form.checkValidity()) {
-                    return alert("Form not valid");
-                }
-                //TODO: validar preço do pedido com preço atual
 
-             
                 var requestsItens = [];
-
+                var itensIds = [];
                 var pay = (itens) => {
                     for (let i = 0; i < itens.length; i++) {
                         requestsItens.push({
@@ -456,21 +451,20 @@ module Ticket {
                             price: itens[i].price,
                             qtd: itens[i].qtd
                         });
+                        itensIds.push(itens[i]);
                     }
+                    if (requestsItens.length <= 0)
+                        return alert("No ticket was selected");
                     var data = JSON.stringify({
                         itens: requestsItens
                     });
+                    var self = this;
+                    var funcSuccess = (result) => {
+                        if (result.responseText) alert(result.responseText);
+                        for (let i = 0; i < itensIds.length; i++) self.delete(itensIds[i], null);
+                    };
 
-                    var funcObserver = result => {
-
-                        if (result.responseText)
-                            alert(result.responseText);
-                        else
-                            alert(result);
-
-                    }
-
-                    Ajax.post("/request/BuyOnClick", data, funcObserver, funcObserver);
+                    Ajax.post("/request/BuyOnClick", data, funcSuccess, result=> alert(result));
                 };
 
                 Controls.Cart.instancia.onLoadAllRequest = pay;
@@ -493,6 +487,8 @@ module Ticket {
             cartNumber: string;
             saveCard: boolean;
             name: string;
+            creditCardBrand = 0;
+            installmentCount = 1;
 
             /**generates valid number for validity numbers
             * @returns {valid number  for year validate of card} 
@@ -522,7 +518,7 @@ module Ticket {
                 var regex = new RegExp("\d+");
 
                 var requestsItens = [];
-
+                var itensIds = [];
                 var pay = (itens) => {
                     for (let i = 0; i < itens.length; i++) {
                         requestsItens.push({
@@ -530,7 +526,11 @@ module Ticket {
                             price: itens[i].price,
                             qtd: itens[i].qtd
                         });
+                        itensIds.push(itens[i]);
                     }
+                    if (requestsItens.length <= 0)
+                        return alert("No ticket was selected");
+                  
                     var data = JSON.stringify({
                         cardCvv: this.cartCvv,
                         cardNumber: this.cartNumber.replace(regex, ""),
@@ -538,19 +538,21 @@ module Ticket {
                         validYear: this.validYear,
                         name: this.name,
                         saveCard: this.saveCard,
+                        creditCardBrand: this.creditCardBrand,
+                        installmentCount: this.installmentCount,
                         itens: requestsItens
                     });
+                    var self = this;
 
-                    var funcObserver = result => {
+                    var funcSuccess = (result) => {
+                        if (result.responseText) alert(result.responseText);
+                        for (var i = 0; i < itensIds.length; i++)
+                            Controls.Cart.instancia.delete(itensIds[i], null);
 
-                        if (result.responseText)
-                            alert(result.responseText);
-                        else
-                            alert(result);
+                        Controls.Cart.instancia.refresh();
+                    };
 
-                    }
-
-                    Ajax.post("/request", data, funcObserver, funcObserver);
+                    Ajax.post("/request", data, funcSuccess, (result) => alert(result));
                 };
 
                 Controls.Cart.instancia.onLoadAllRequest = pay;

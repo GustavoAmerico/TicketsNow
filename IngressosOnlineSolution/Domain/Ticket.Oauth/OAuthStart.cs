@@ -1,5 +1,3 @@
-using System.Web.Http;
-using Microsoft.Owin.Security.OAuth;
 using Owin;
 
 namespace Ticket.Oauth
