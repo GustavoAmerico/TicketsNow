@@ -9,7 +9,7 @@ namespace Ticket.Views.HttpApi
 {
     public class SwaggerConfig
     {
-        protected SwaggerConfig() { }
+        private SwaggerConfig() { }
 
         public static void Register()
         {

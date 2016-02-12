@@ -3,7 +3,7 @@ using System.Data.Entity.Infrastructure;
 using Ticket.Collections;
 namespace Ticket.DB.EntityFramework
 {
-    public class Repository : IRequestContext
+    public class Repository : IRequestContext, IEventContext
     {
         private readonly Context _context;
         public IDataProvider Provider => _context;
@@ -24,7 +24,10 @@ namespace Ticket.DB.EntityFramework
         public EfTable<UserInfo, UserInfoCollection> UsersInfo => _eventsInfo ??
             (_eventsInfo = new EfTable<UserInfo, UserInfoCollection>(_context.UsersInfo, (x) => new UserInfoCollection(x)));
 
-        RequestCollection IRequestContext.Requests => Requests.Base;
+        IEfTable<Request, RequestCollection> IRequestContext.Requests => Requests;
+
+        IEfTable<Event, EventCollection> IEventContext.Events => Events;
+
 
         public Repository()
         {

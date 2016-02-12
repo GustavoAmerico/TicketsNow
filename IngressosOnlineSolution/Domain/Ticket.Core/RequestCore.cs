@@ -41,14 +41,29 @@ namespace Ticket.Core
         }
 
         /// <exception cref="InvalidOperationException">Ocorre quando não há itens no pedido</exception>
-        public void BuyAsync(IBuyOnClick model)
+        public void Buy(IBuyOnClick model)
         {
+            var user = _context.UsersInfo.FindOrDefault(model.UserId);
+            if (user == null)
+                throw new InvalidOperationException("User not found");
+            if (!user.InstantBuyKey.HasValue)
+                throw new InvalidOperationException("You not have an card configution, you need sends  informations from card of credit");
+
+            Contract.EndContractBlock();
+
             var request = SaveRequest(model);
-            if (!request.User.InstantBuyKey.HasValue)
-                throw new InvalidOperationException("Your not have an card configution");
 
             var card = new CardOfCredit(request.User.InstantBuyKey.Value);
             Buy(card, request, false);
+        }
+
+        /// <summary>makes the purchase of tickets</summary>
+        /// <param name="model">Request</param>
+        /// <exception cref="InvalidOperationException">Ocorre quando não há itens no pedido</exception>
+        public Task BuyAsync(IBuyOnClick model)
+        {
+            return Task.Factory.StartNew(() => Buy(model));
+
         }
 
         /// <summary>makes the purchase of tickets</summary>
@@ -67,9 +82,9 @@ namespace Ticket.Core
         {
             Contract.EnsuresOnThrow<ArgumentNullException>(string.IsNullOrWhiteSpace(userId), "The User identifier can not be null");
 
-            var requests = _context.Requests.Find(userId)
+            var requests = _context.Requests.Base.Find(userId)
                 .Select(r => new RequestView(r))
-                .OrderByDescending(x=>x.Date)
+                .OrderByDescending(x => x.Date)
                 .ToArray();
 
             return requests;
@@ -116,7 +131,7 @@ namespace Ticket.Core
 
             try
             {
-              _userFromRequest = _context.UsersInfo.FindOrDefault(model.UserId);
+                _userFromRequest = _context.UsersInfo.FindOrDefault(model.UserId);
                 if (_userFromRequest == null)
                     throw new InvalidOperationException("Not found user selected");
                 request.User = _userFromRequest;

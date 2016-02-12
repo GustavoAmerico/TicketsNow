@@ -5,7 +5,7 @@ namespace Ticket.Views.HttpApi
 {
     public class FilterConfig
     {
-        protected FilterConfig() { }
+        private FilterConfig() { }
 
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
@@ -16,7 +16,7 @@ namespace Ticket.Views.HttpApi
             filters.Add(new GenericException());
         }
 
-        internal class GenericException : HandleErrorAttribute
+        internal sealed class GenericException : HandleErrorAttribute
         {
             public override void OnException(ExceptionContext filterContext)
             {

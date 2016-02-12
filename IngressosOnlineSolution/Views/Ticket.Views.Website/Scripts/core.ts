@@ -101,7 +101,20 @@ class Ajax {
             .done(success)
             .fail(error);
     }
+
+    static failResponse(response): void {
+        var message = "";
+        if (response.status === 400 && response.responseJSON && response.responseJSON.message) {
+            message = response.responseJSON.message;
+        }
+        else if (response.responseJSON) {
+            message = JSON.stringify(response.responseJSON);
+        } else
+        { message = JSON.stringify(response); }
+        win.alert(message);
+    }
 }
+
 
 class User {
     private static storageKey = "oauth_user";

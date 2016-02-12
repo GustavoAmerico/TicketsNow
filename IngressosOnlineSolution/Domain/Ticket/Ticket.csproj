@@ -48,6 +48,8 @@
     <Compile Include="Collections\RequestCollection.cs" />
     <Compile Include="Collections\EventCollection.cs" />
     <Compile Include="DB\IDataProvider.cs" />
+    <Compile Include="DB\IEfTable.cs" />
+    <Compile Include="DB\IEventContext.cs" />
     <Compile Include="DB\IRepositotyBase.cs" />
     <Compile Include="DB\IRequestContext.cs" />
     <Compile Include="Event.cs" />

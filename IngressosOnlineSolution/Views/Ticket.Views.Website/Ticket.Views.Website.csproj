@@ -41,6 +41,7 @@
     <Content Include="oauth\index.html" />
     <Content Include="oauth\login.html" />
     <Content Include="oauth\register.html" />
+    <Content Include="Scripts\core.js" />
     <Content Include="Scripts\i18n\dicionario.js" />
     <Content Include="Scripts\main\angular-route.min.js" />
     <Content Include="Scripts\main\angular.min.js" />
@@ -48,6 +49,8 @@
     <Content Include="Scripts\main\bootstrap.min.js" />
     <Content Include="Scripts\main\jquery.min.js" />
     <None Include="Scripts\_references.js" />
+    <Content Include="Scripts\oauth.js" />
+    <Content Include="Scripts\ticket.js" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -66,8 +69,7 @@
     <Content Include="fonts\ionicons.eot" />
     <Content Include="fonts\ionicons.ttf" />
     <Content Include="fonts\ionicons.woff" />
-    <None Include="ticketsnow - FTP.pubxml" />
-    <None Include="ticketsnow - Web Deploy.pubxml" />
+    <None Include="ticketsnow - Web Deploy %282%29.pubxml" />
     <None Include="ticketsnow.pubxml" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>

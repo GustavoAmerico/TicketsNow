@@ -64,5 +64,6 @@ namespace Ticket.Core
             InstantBuyKey = instantBuyKey;
         }
 
+
     }
 }

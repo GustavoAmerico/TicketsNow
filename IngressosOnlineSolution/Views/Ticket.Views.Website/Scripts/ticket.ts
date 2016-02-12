@@ -134,7 +134,10 @@ module Ticket {
 
                         Ajax.get<Directive.Feast>("/event", e => {
                             deferred.resolve(e);
-                        }, win.alert, () => new Directive.Feast());
+                        }, e=> {
+                            var text = JSON.stringify(e);
+                            win.alert(text);
+                        }, () => new Directive.Feast());
                         return deferred.promise;
                     };
 
@@ -208,6 +211,8 @@ module Ticket {
                     Cart._instancia = new Cart();
                 return Cart._instancia;
             }
+
+            haveItens = false;
 
             /**Gets an store to executes operation en JS databas */
             get requestStore(): IDBObjectStore {
@@ -294,12 +299,15 @@ module Ticket {
                             list.push(cursor.value);
                             allPrice += (cursor.value.price * cursor.value.qtd);
                         }
+
                         cursor.continue();
                     } else {
                         try {
                             if (its.onLoadAllRequest)
                                 its.onLoadAllRequest(list);
                             its.totalPrice = allPrice;
+                            if (list.length > 0)
+                                its.haveItens = true;
                         } catch (e) {
                             console.error("your function triggered an error {0}", e);
                         }
@@ -441,17 +449,16 @@ module Ticket {
 
             /**Runs payment of items in cart*/
             pay() {
-
                 var requestsItens = [];
                 var itensIds = [];
                 var pay = (itens) => {
-                    for (let i = 0; i < itens.length; i++) {
+                    for (var i = 0; i < itens.length; i++) {
                         requestsItens.push({
                             id: itens[i].id,
                             price: itens[i].price,
                             qtd: itens[i].qtd
                         });
-                        itensIds.push(itens[i]);
+                        itensIds.push(itens[i].id);
                     }
                     if (requestsItens.length <= 0)
                         return alert("No ticket was selected");
@@ -461,10 +468,11 @@ module Ticket {
                     var self = this;
                     var funcSuccess = (result) => {
                         if (result.responseText) alert(result.responseText);
-                        for (let i = 0; i < itensIds.length; i++) self.delete(itensIds[i], null);
+                        for (var i = 0; i < itensIds.length; i++) self.delete(itensIds[i], null);
+                        Controls.Cart.instancia.refresh();
                     };
 
-                    Ajax.post("/request/BuyOnClick", data, funcSuccess, result=> alert(result));
+                    Ajax.post("/request/BuyOnClick", data, funcSuccess, Ajax.failResponse);
                 };
 
                 Controls.Cart.instancia.onLoadAllRequest = pay;
@@ -497,7 +505,7 @@ module Ticket {
                 var currentYear = new Date().getFullYear();
                 var years = [];
 
-                for (let i = currentYear; i < (currentYear + 10); i++) {
+                for (var i = currentYear; i < (currentYear + 10); i++) {
                     years.push(i);
                 }
                 return years;
@@ -520,17 +528,17 @@ module Ticket {
                 var requestsItens = [];
                 var itensIds = [];
                 var pay = (itens) => {
-                    for (let i = 0; i < itens.length; i++) {
+                    for (var i = 0; i < itens.length; i++) {
                         requestsItens.push({
                             id: itens[i].id,
                             price: itens[i].price,
                             qtd: itens[i].qtd
                         });
-                        itensIds.push(itens[i]);
+                        itensIds.push(itens[i].id);
                     }
                     if (requestsItens.length <= 0)
                         return alert("No ticket was selected");
-                  
+
                     var data = JSON.stringify({
                         cardCvv: this.cartCvv,
                         cardNumber: this.cartNumber.replace(regex, ""),
@@ -545,7 +553,7 @@ module Ticket {
                     var self = this;
 
                     var funcSuccess = (result) => {
-                        if (result.responseText) alert(result.responseText);
+                        if (result.responseText) win.alert(result.responseText);
                         for (var i = 0; i < itensIds.length; i++)
                             Controls.Cart.instancia.delete(itensIds[i], null);
 

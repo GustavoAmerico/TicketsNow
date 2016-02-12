@@ -7,6 +7,6 @@ namespace Ticket.DB
 
         UserInfoCollection UsersInfo { get; }
 
-        RequestCollection Requests { get; }
+        IEfTable<Request, RequestCollection> Requests { get; }
     }
 }

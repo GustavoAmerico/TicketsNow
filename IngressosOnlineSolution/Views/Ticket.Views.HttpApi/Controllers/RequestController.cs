@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
 using Ticket.Core;
@@ -35,7 +36,7 @@ namespace Ticket.Views.HttpApi.Controllers
         }
 
         [HttpPost, Route("BuyOnClick")]
-        public IHttpActionResult BuyOnClick([FromBody] RequestOnClickModel request)
+        public async Task<IHttpActionResult> BuyOnClick([FromBody] RequestOnClickModel request)
         {
             if (request == null || !ModelState.IsValid)
                 return BadRequest("your request is invalid, check required field");
@@ -45,7 +46,7 @@ namespace Ticket.Views.HttpApi.Controllers
             try
             {
 
-                Core.BuyAsync(request);
+                await Core.BuyAsync(request);
 
             }
             catch (InvalidOperationException ex)
@@ -58,7 +59,7 @@ namespace Ticket.Views.HttpApi.Controllers
         }
 
         [HttpPost, Route]
-        public IHttpActionResult Post([FromBody] RequestModel request)
+        public async Task<IHttpActionResult> Post([FromBody] RequestModel request)
         {
             try
             {
@@ -68,7 +69,7 @@ namespace Ticket.Views.HttpApi.Controllers
                 var id = User.Identity.GetUserId<string>();
                 request.UserId = new Guid(id);
 
-                Core.BuyAsync(request);
+                await Core.BuyAsync(request);
                 return Ok("Your request has been successfully processed and send your email");
             }
             catch (Exception ex)

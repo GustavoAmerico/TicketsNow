@@ -10,7 +10,7 @@ namespace Ticket.DB.EntityFramework
     /// <summary>Capsule for internal classes from entityFramework</summary>
     /// <typeparam name="T">Specific type of element in data source</typeparam>
     /// <typeparam name="TBaseCollection">Collection with logic data base type</typeparam>
-    public class EfTable<T, TBaseCollection> : BaseEnumerable<T>, ICollection<T>, IQueryable<T>
+    public class EfTable<T, TBaseCollection> : BaseEnumerable<T>, IEfTable<T, TBaseCollection>
         where T : class
         where TBaseCollection : BaseCollection<T>
 
@@ -30,7 +30,7 @@ namespace Ticket.DB.EntityFramework
         /// <summary>Obtém e envia um valor indicando se a coleção é somente leitura ou não</summary>
         public bool IsReadOnly => false;
 
-        public TBaseCollection Base;
+        public TBaseCollection Base { get; }
 
 
         /// <summary>Initialize Collection Querably to type <see cref="T"/></summary>
@@ -51,8 +51,7 @@ namespace Ticket.DB.EntityFramework
         }
 
         /// <summary>Disabled track for query</summary>
-        /// <returns></returns>
-        public IQueryable<T> AsNoTrack()
+                public IQueryable<T> AsNoTrack()
         {
             return Provider.AsNoTracking();
         }

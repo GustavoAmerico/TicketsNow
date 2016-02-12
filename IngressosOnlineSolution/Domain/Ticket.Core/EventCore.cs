@@ -5,11 +5,17 @@ namespace Ticket.Core
 {
     public class EventCore
     {
-        private readonly Repository _repository;
+        private readonly DB.IEventContext _repository;
 
         public EventCore()
         {
             _repository = new Repository();
+        }
+
+        public EventCore(DB.IEventContext repository)
+        {
+            _repository = repository;
+
         }
 
         /// <summary>Returns all events open</summary>
