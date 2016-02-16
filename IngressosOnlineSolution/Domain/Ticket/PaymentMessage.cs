@@ -23,14 +23,7 @@ namespace Ticket
         /// <summary>Returns a string that represents the current object.</summary>
         /// <returns>A string that represents the current object.</returns>
         /// <filterpriority>2</filterpriority>
-        public override string ToString()
-        {
-            var text = new StringBuilder();
-            if (StatusCode != 200)
-                text.AppendLine($"ErroCode:{MessageCode} </br> ");
-            text.AppendLine(Message);
+        public override string ToString() => $"ErroCode:{MessageCode} <br /> {Message}";
 
-            return text.ToString();
-        }
     }
 }

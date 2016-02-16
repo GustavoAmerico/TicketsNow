@@ -172,6 +172,15 @@
                             else
                                 return alert(`Internal error: ${error.message}`);
                         }
+                    case 400:
+                        if (request.responseJSON) {
+                            if (request.responseJSON.message)
+                                return win.alert(request.responseJSON.message);
+                            else
+                                return win.alert(request.responseJSON);
+                        }
+                        return win.alert(request);
+                        break;
                     default:
                         const erros = request.responseJSON ? request.responseJSON.modelState : [""];
 
@@ -210,7 +219,7 @@
         }
     }
 
-    
+
     export class AppStart {
         run(): void {
             const modulo = win.angular.module("oauth", ["ngRoute"]);

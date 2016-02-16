@@ -105,6 +105,7 @@ module Ticket {
             description = "";
             number = "";
             total = 0;
+            statusId = 0;
 
         }
 
@@ -278,7 +279,7 @@ module Ticket {
                 var store = this.requestStore;
                 var request = store.delete(key);
                 if (onSuccess != null) request.onsuccess = onSuccess;
-                this.refresh();
+                 
             }
 
 
@@ -290,6 +291,7 @@ module Ticket {
                 var request = store.openCursor();
                 var list = [];
                 var its = this;
+
                 var allPrice = 0;
                 request.onerror = (e) => console.log(e);
                 request.onsuccess = (event) => {
@@ -302,17 +304,18 @@ module Ticket {
 
                         cursor.continue();
                     } else {
-                        try {
-                            if (its.onLoadAllRequest)
-                                its.onLoadAllRequest(list);
-                            its.totalPrice = allPrice;
-                            if (list.length > 0)
-                                its.haveItens = true;
-                        } catch (e) {
-                            console.error("your function triggered an error {0}", e);
-                        }
+
+                        if (its.onLoadAllRequest)
+                            its.onLoadAllRequest(list);
+
+                        if (list.length > 0)
+                            its.haveItens = true;
+
+                        its.totalPrice = allPrice;
+
                     }
                 };
+
 
             }
 
@@ -367,6 +370,7 @@ module Ticket {
                     if (id && cart.delete) {
                         cart.delete(id, e => input.parentElement.parentElement.parentElement
                             .removeChild(input.parentElement.parentElement));
+                        cart.refresh();
                     }
                 };
                 btnRemove.classList.add("btn", "btn-danger");
@@ -467,9 +471,10 @@ module Ticket {
                     });
                     var self = this;
                     var funcSuccess = (result) => {
-                        if (result.responseText) alert(result.responseText);
                         for (var i = 0; i < itensIds.length; i++) self.delete(itensIds[i], null);
                         Controls.Cart.instancia.refresh();
+                        return alert(result);
+
                     };
 
                     Ajax.post("/request/BuyOnClick", data, funcSuccess, Ajax.failResponse);
@@ -553,11 +558,11 @@ module Ticket {
                     var self = this;
 
                     var funcSuccess = (result) => {
-                        if (result.responseText) win.alert(result.responseText);
+
                         for (var i = 0; i < itensIds.length; i++)
                             Controls.Cart.instancia.delete(itensIds[i], null);
-
                         Controls.Cart.instancia.refresh();
+                        return win.alert(result);
                     };
 
                     Ajax.post("/request", data, funcSuccess, (result) => alert(result));

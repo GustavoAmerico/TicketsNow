@@ -10,20 +10,18 @@ using GatewayApiClient.DataContracts;
 namespace Ticket.PayMethod
 {
     public class MundiPaggClient
-    {
-        public Action<PaymentMessage> OnCreated;
-        public Action<PaymentMessage> OnError;
+    { 
         private GatewayServiceClient _serviceClient;
 
         public MundiPaggClient()
         {
-            var key = new Guid("5e62ba71-73d4-4ca0-8c03-26d1f78d6c71");
-            const string link = "https://sandbox.mundipaggone.com";
+         //   var key = new Guid("5e62ba71-73d4-4ca0-8c03-26d1f78d6c71");
+       //     const string link = "https://sandbox.mundipaggone.com";
             // Creates the client that will send the transaction.
-            _serviceClient = new GatewayServiceClient(key, new Uri(link));
+            _serviceClient = new GatewayServiceClient();
         }
 
-        public void Pay(IOrder order, params ICreditCard[] cards)
+        public IEnumerable<PaymentMessage> Pay(IOrder order, params ICreditCard[] cards)
         {
             var transictions = new Collection<CreditCardTransaction>(Generate(order, cards)
                 .ToArray());
@@ -50,44 +48,28 @@ namespace Ticket.PayMethod
                                 InstantBuyKey = creditCardTransaction.CreditCard.InstantBuyKey
 
                             });
+                        return feedBack.ToArray();
 
-                        foreach (var msg in feedBack)
-                        {
-                            if (OnCreated != null)
-                                OnCreated(msg);
-                        }
-                        break;
                     }
-                case HttpStatusCode.InternalServerError:
-                    {
-                        InternalServerError();
-                        break;
-                    }
+       
                 default:
                     {
-                        Error(createSaleResponse, (int)httpResponse.HttpStatusCode, order);
-                        break;
+                        var payments = createSaleResponse.ErrorReport
+                            .ErrorItemCollection
+                            .Select(errorItem => new PaymentMessage()
+                                            {
+                                                Message = errorItem.Description,
+                                                StatusCode = (int)httpResponse.HttpStatusCode,
+                                                MessageCode = errorItem.ErrorCode,
+                                                Email = order.UserEmail
+                                            })
+                             .ToArray();
+                        return payments;
                     }
             }
 
         }
 
-        private void Error(CreateSaleResponse createSaleResponse, int statusCode, IOrder order)
-        {
-            if (OnError == null || createSaleResponse.ErrorReport == null) return;
-            var payments =
-                createSaleResponse.ErrorReport.ErrorItemCollection
-                .Select(errorItem => new PaymentMessage()
-                {
-                    Message = errorItem.Description,
-                    StatusCode = statusCode,
-                    MessageCode = errorItem.ErrorCode,
-                    Email = order.UserEmail
-                }).ToArray();
-
-            foreach (var msg in payments)
-                OnError(msg);
-        }
 
         private IEnumerable<CreditCardTransaction> Generate(IOrder order, ICreditCard[] cards)
         {
@@ -109,7 +91,7 @@ namespace Ticket.PayMethod
                         InstantBuyKey = card.InstantBuyKey.Value
                     };
                     yield return transaction;
-                    continue; 
+                    continue;
                 }
                 transaction.CreditCard = card.Copiar<ICreditCard, CreditCard>();
                 Contract.Assert(card.CreditCardBrand.HasValue);

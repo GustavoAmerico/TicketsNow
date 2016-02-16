@@ -55,6 +55,7 @@ var Ticket;
                 this.description = "";
                 this.number = "";
                 this.total = 0;
+                this.statusId = 0;
             }
             MyRequest.configurarAngular = function (modulo) {
                 var controllerName = "MyRequestCtrl";
@@ -200,7 +201,6 @@ var Ticket;
                 var request = store.delete(key);
                 if (onSuccess != null)
                     request.onsuccess = onSuccess;
-                this.refresh();
             };
             Cart.prototype.loadAllRequest = function () {
                 var store = this.requestStore;
@@ -219,16 +219,11 @@ var Ticket;
                         cursor.continue();
                     }
                     else {
-                        try {
-                            if (its.onLoadAllRequest)
-                                its.onLoadAllRequest(list);
-                            its.totalPrice = allPrice;
-                            if (list.length > 0)
-                                its.haveItens = true;
-                        }
-                        catch (e) {
-                            console.error("your function triggered an error {0}", e);
-                        }
+                        if (its.onLoadAllRequest)
+                            its.onLoadAllRequest(list);
+                        if (list.length > 0)
+                            its.haveItens = true;
+                        its.totalPrice = allPrice;
                     }
                 };
             };
@@ -270,6 +265,7 @@ var Ticket;
                     if (id && cart.delete) {
                         cart.delete(id, function (e) { return input.parentElement.parentElement.parentElement
                             .removeChild(input.parentElement.parentElement); });
+                        cart.refresh();
                     }
                 };
                 btnRemove.classList.add("btn", "btn-danger");
@@ -357,11 +353,10 @@ var Ticket;
                     });
                     var self = _this;
                     var funcSuccess = function (result) {
-                        if (result.responseText)
-                            alert(result.responseText);
                         for (var i = 0; i < itensIds.length; i++)
                             self.delete(itensIds[i], null);
                         Controls.Cart.instancia.refresh();
+                        return alert(result);
                     };
                     Ajax.post("/request/BuyOnClick", data, funcSuccess, Ajax.failResponse);
                 };
@@ -429,11 +424,10 @@ var Ticket;
                     });
                     var self = _this;
                     var funcSuccess = function (result) {
-                        if (result.responseText)
-                            win.alert(result.responseText);
                         for (var i = 0; i < itensIds.length; i++)
                             Controls.Cart.instancia.delete(itensIds[i], null);
                         Controls.Cart.instancia.refresh();
+                        return win.alert(result);
                     };
                     Ajax.post("/request", data, funcSuccess, function (result) { return alert(result); });
                 };

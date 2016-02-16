@@ -16,6 +16,8 @@ namespace Ticket
 
         public virtual UserInfo User { get; set; }
 
+        public int StatusId { get; set; } = 204;
+
         /// <summary>Gets and sends total all itens</summary>
         public decimal Total => Itens.Sum(i => (i.PriceForRequest * i.NumberOfItens));
 
@@ -38,6 +40,6 @@ namespace Ticket
             Itens = itens;
         }
 
- 
+
     }
 }

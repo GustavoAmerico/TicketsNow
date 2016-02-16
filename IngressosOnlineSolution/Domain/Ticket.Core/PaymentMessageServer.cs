@@ -7,6 +7,8 @@ namespace Ticket.Core
     {
         private SmtpClient _smtp;
 
+        private const string DefaultFrom = "mundipagg@ticketsnow.com";
+
         private SmtpClient Smtp => _smtp ?? (_smtp = new SmtpClient("smtp.sendgrid.net"));
 
         public void OnCompleted()
@@ -18,11 +20,12 @@ namespace Ticket.Core
             erro.LogAndThrow();
         }
 
-        public async void OnNext(PaymentMessage message)
+        public void OnNext(PaymentMessage message)
         {
+
             if (message.Email == null) return;
-            var mail = new MailMessage("noreplay@ticketsnow.net", message.Email) { Body = message.ToString() };
-            await Smtp.SendMailAsync(mail);
+            var mail = new MailMessage(DefaultFrom, message.Email) { Body = message.ToString() };
+            Smtp.Send(mail);
         }
     }
 }

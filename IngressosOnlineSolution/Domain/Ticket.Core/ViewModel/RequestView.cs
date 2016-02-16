@@ -17,8 +17,8 @@ namespace Ticket.Core
             Description = requestView.Any()
                 ? requestView.Aggregate((c, r) => $"{c} <br/> {r}")
                 : "No itens for this request";
-
-            Date = _request.Date.ToString("dd/MM/yyy HH:mm");
+            StatusId = request.StatusId;
+            Date = _request.Date.ToString("dd/MM/yyy HH:mm:ss");
         }
 
         /// <summary>Gets a date</summary>
@@ -29,6 +29,7 @@ namespace Ticket.Core
 
         public string Number => _request.Id.ToString();
 
+        public int StatusId { get; private set; }
 
         public decimal Total => _request.Total;
     }

@@ -95,27 +95,32 @@ namespace Ticket.Core
             card.Subscribe(MessageServer);
 
             var gateway = new MundiPaggClient();
-            gateway.OnCreated += (msg) =>
-            {
-                if (saveCard)
-                {
-                    _userFromRequest.InstantBuyKey = msg.InstantBuyKey;
-                    _context.SaveChange();
-                }
-                card.Notificar(msg);
-            };
-            gateway.OnError += card.Notificar;
             var priceInCents = (long)request.Total * 100;
-            gateway.Pay(new Order(priceInCents,
-                request.Id.ToString(), _userFromRequest.Email), card);
+            var order = new Order(priceInCents,
+                request.Id.ToString(), _userFromRequest.Email);
+
+            var msg = gateway.Pay(order, card);
+            foreach (var message in msg)
+            {
+                if (saveCard && message.StatusCode == 201)
+                    _userFromRequest.InstantBuyKey = message.InstantBuyKey;
+
+                request.StatusId = message.StatusCode;
+                card.Notificar(message);
+            }
+            var resultSave = _context.SaveChange();
+            Contract.Assert(resultSave > 0);
         }
 
         /// <exception cref="InvalidOperationException">Ocorre quando não há itens no pedido</exception>
         /// <returns></returns>
         private Request SaveRequest(IBuyOnClick model)
         {
-            if (model == null || model.Itens.IsNullOrEmpty())
-                throw new InvalidOperationException("Request need ticket(s)");
+            var noItens = (model == null || model.Itens.IsNullOrEmpty());
+            Contract.EnsuresOnThrow<InvalidOperationException>(noItens, "Request need ticket(s)");
+
+            _userFromRequest = _context.UsersInfo.FindOrDefault(model.UserId);
+            Contract.EnsuresOnThrow<InvalidOperationException>(_userFromRequest == null, "Not found user selected");
 
             Contract.EndContractBlock();
 
@@ -131,9 +136,6 @@ namespace Ticket.Core
 
             try
             {
-                _userFromRequest = _context.UsersInfo.FindOrDefault(model.UserId);
-                if (_userFromRequest == null)
-                    throw new InvalidOperationException("Not found user selected");
                 request.User = _userFromRequest;
                 _context.Requests.Add(request);
                 var result = _context.SaveChange();
@@ -145,5 +147,6 @@ namespace Ticket.Core
                 throw;
             }
         }
+
     }
 }

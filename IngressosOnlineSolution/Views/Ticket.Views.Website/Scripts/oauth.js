@@ -134,6 +134,15 @@ var OAuth;
                             else
                                 return alert("Internal error: " + error_1.message);
                         }
+                    case 400:
+                        if (request.responseJSON) {
+                            if (request.responseJSON.message)
+                                return win.alert(request.responseJSON.message);
+                            else
+                                return win.alert(request.responseJSON);
+                        }
+                        return win.alert(request);
+                        break;
                     default:
                         var erros = request.responseJSON ? request.responseJSON.modelState : [""];
                         if (!erros || !erros[""] || erros[""].length === 0)
